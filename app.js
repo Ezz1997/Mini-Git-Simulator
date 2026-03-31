@@ -1,15 +1,30 @@
 import fs from "node:fs";
 
 function createRepo(repoName) {
+  let res = createDir(repoName);
+
+  if (res) {
+    console.log(`Repository ${repoName} created Successfully!`);
+  }
+
+  if (res === false) {
+    console.log("Another repository with same name already exists.");
+  }
+
+  if (res === undefined) {
+    console.error("Failed to create new directory");
+  }
+}
+
+function createDir(dirName) {
   try {
-    if (!fs.existsSync(repoName)) {
-      fs.mkdirSync(repoName);
-      console.log(`Repository ${repoName} created Successfully!`);
+    if (!fs.existsSync(dirName)) {
+      fs.mkdirSync(dirName);
+      return true;
     } else {
-      console.log("Another repository with same name already exists.");
+      return false;
     }
   } catch (err) {
-    console.error("Failed to create new repository");
     console.error(err);
   }
 }

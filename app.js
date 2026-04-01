@@ -1,12 +1,14 @@
 import fs from "node:fs";
 
 let curRepo = "x";
+let reposList = [];
 
 function createRepo(repoName) {
   let res = createDir(repoName);
 
   if (res) {
     console.log(`Repository ${repoName} created Successfully!`);
+    reposList.push(repoName);
   }
 
   if (res === false) {
@@ -14,7 +16,7 @@ function createRepo(repoName) {
   }
 
   if (res === undefined) {
-    console.error("Failed to create new directory");
+    console.error("Failed to create new repository");
   }
 }
 
@@ -22,15 +24,15 @@ function createBranch(branchName) {
   let res = createDir(`${curRepo}/${branchName}`);
 
   if (res) {
-    console.log(`Repository ${branchName} created Successfully!`);
+    console.log(`Branch ${branchName} created Successfully!`);
   }
 
   if (res === false) {
-    console.log("Another repository with same name already exists.");
+    console.log("Another branch with same name already exists.");
   }
 
   if (res === undefined) {
-    console.error("Failed to create new directory");
+    console.error("Failed to create new branch");
   }
 }
 

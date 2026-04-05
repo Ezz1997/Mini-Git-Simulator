@@ -1,27 +1,27 @@
 import fs from "node:fs";
 
 let curRepo = "x";
-let reposList = [];
+const defaultBranch = "main";
 
 function createRepo(repoName) {
-  let res = createDir(repoName);
+  let repoRes = createDir(repoName);
+  let branchRes = createBranch(defaultBranch, repoName);
 
-  if (res) {
+  if (repoRes && branchRes) {
     console.log(`Repository ${repoName} created Successfully!`);
-    reposList.push(repoName);
   }
 
-  if (res === false) {
+  if (repoRes === false) {
     console.log("Another repository with same name already exists.");
   }
 
-  if (res === undefined) {
+  if (repoRes === undefined) {
     console.error("Failed to create new repository");
   }
 }
 
-function createBranch(branchName) {
-  let res = createDir(`${curRepo}/${branchName}`);
+function createBranch(branchName, repoName) {
+  let res = createDir(`${repoName || curRepo}/${branchName}`);
 
   if (res) {
     console.log(`Branch ${branchName} created Successfully!`);
@@ -49,6 +49,37 @@ function createDir(dirName) {
   }
 }
 
+function commitChanges() {
+  let res = fs.readdirSync("x/main");
+  let fileName = "story_version";
+
+  fileName += res.length;
+
+  const lastSavedVersion = readFile(`x/main/${res[res.length - 1]}`);
+  const currentVersion = readFile("story.txt");
+
+  if (lastSavedVersion !== currentVersion) {
+    fs.copyFile("story.txt", `x/main/${fileName}.txt`, (err) => {
+      if (err) {
+        console.error("Error copying file:", err);
+      } else {
+        console.log("File copied successfully!");
+      }
+    });
+  } else {
+    console.info("No changes found.");
+  }
+}
+
+function readFile(filePath) {
+  try {
+    const data = fs.readFileSync(filePath, "utf8");
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 const args = process.argv.slice(2, 4);
 const action = args[0];
 const value = args[1];
@@ -61,6 +92,9 @@ switch (action) {
     break;
   case "create-branch":
     createBranch(value);
+    break;
+  case "commit":
+    commitChanges();
     break;
   default:
     console.log("Unknown action, Try again");

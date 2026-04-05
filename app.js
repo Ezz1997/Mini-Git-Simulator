@@ -50,16 +50,16 @@ function createDir(dirName) {
 }
 
 function commitChanges() {
-  let res = fs.readdirSync("x/main");
+  let res = fs.readdirSync(`${curRepo}/main`);
   let fileName = "story_version";
 
   fileName += res.length;
 
-  const lastSavedVersion = readFile(`x/main/${res[res.length - 1]}`);
+  const lastSavedVersion = readFile(`${curRepo}/main/${res[res.length - 1]}`);
   const currentVersion = readFile("story.txt");
 
   if (lastSavedVersion !== currentVersion) {
-    fs.copyFile("story.txt", `x/main/${fileName}.txt`, (err) => {
+    fs.copyFile("story.txt", `${curRepo}/main/${fileName}.txt`, (err) => {
       if (err) {
         console.error("Error copying file:", err);
       } else {

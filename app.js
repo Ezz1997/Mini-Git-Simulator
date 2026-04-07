@@ -1,6 +1,7 @@
 import fs from "node:fs";
 
-let curRepo = "x";
+let userRepo = "x";
+let systemRepo = "sys";
 const defaultBranch = "main";
 
 function createRepo(repoName) {
@@ -21,7 +22,7 @@ function createRepo(repoName) {
 }
 
 function createBranch(branchName, repoName) {
-  let res = createDir(`${repoName || curRepo}/${branchName}`);
+  let res = createDir(`${repoName || userRepo}/${branchName}`);
 
   if (res) {
     console.log(`Branch ${branchName} created Successfully!`);
@@ -50,25 +51,30 @@ function createDir(dirName) {
 }
 
 function commitChanges() {
-  let res = fs.readdirSync(`${curRepo}/main`);
+  let res = fs.readdirSync(`${userRepo}/main`);
   let fileName = "story_version";
 
   fileName += res.length;
 
-  const lastSavedVersion = readFile(`${curRepo}/main/${res[res.length - 1]}`);
+  const lastSavedVersion = readFile(`${userRepo}/main/${res[res.length - 1]}`);
   const currentVersion = readFile("story.txt");
 
   if (lastSavedVersion !== currentVersion) {
-    fs.copyFile("story.txt", `${curRepo}/main/${fileName}.txt`, (err) => {
-      if (err) {
-        console.error("Error copying file:", err);
-      } else {
-        console.log("File copied successfully!");
-      }
-    });
+    copyFile("story.txt", `${userRepo}/main/${fileName}.txt`);
+    copyFile("story.txt", `${systemRepo}/main/${fileName}.txt`);
   } else {
     console.info("No changes found.");
   }
+}
+
+function copyFile(srcPath, distPath) {
+  fs.copyFile(srcPath, distPath, (err) => {
+    if (err) {
+      console.error("Error copying file:", err);
+    } else {
+      console.log("File copied successfully!");
+    }
+  });
 }
 
 function readFile(filePath) {

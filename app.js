@@ -1,7 +1,7 @@
 import fs from "node:fs";
 
-let userRepo = "x";
-let systemRepo = "sys";
+let localRepo = "x";
+let remoteRepo = "sys";
 const defaultBranch = "main";
 
 function createRepo(repoName) {
@@ -22,7 +22,7 @@ function createRepo(repoName) {
 }
 
 function createBranch(branchName, repoName) {
-  let res = createDir(`${repoName || userRepo}/${branchName}`);
+  let res = createDir(`${repoName || localRepo}/${branchName}`);
 
   if (res) {
     console.log(`Branch ${branchName} created Successfully!`);
@@ -51,16 +51,16 @@ function createDir(dirName) {
 }
 
 function commitChanges() {
-  let res = fs.readdirSync(`${userRepo}/main`);
+  let res = fs.readdirSync(`${localRepo}/main`);
   let fileName = "story_version";
 
   fileName += res.length;
 
-  const lastSavedVersion = readFile(`${userRepo}/main/${res[res.length - 1]}`);
+  const lastSavedVersion = readFile(`${localRepo}/main/${res[res.length - 1]}`);
   const currentVersion = readFile("story.txt");
 
   if (lastSavedVersion !== currentVersion) {
-    copyFile("story.txt", `${userRepo}/main/${fileName}.txt`);
+    copyFile("story.txt", `${localRepo}/main/${fileName}.txt`);
   } else {
     console.info("No changes found.");
   }
@@ -86,19 +86,19 @@ function readFile(filePath) {
 }
 
 function pushChanges() {
-  let remoteRes = fs.readdirSync(`${systemRepo}/main`);
-  let localRes = fs.readdirSync(`${userRepo}/main`);
+  let remoteRes = fs.readdirSync(`${remoteRepo}/main`);
+  let localRes = fs.readdirSync(`${localRepo}/main`);
   let fileName = localRes[localRes.length - 1];
 
   const localVersion = readFile(
-    `${userRepo}/main/${localRes[localRes.length - 1]}`,
+    `${localRepo}/main/${localRes[localRes.length - 1]}`,
   );
   const remoteVersion = readFile(
-    `${systemRepo}/main/${remoteRes[remoteRes.length - 1]}`,
+    `${remoteRepo}/main/${remoteRes[remoteRes.length - 1]}`,
   );
 
   if (remoteVersion !== localVersion) {
-    copyFile(`${userRepo}/main/${fileName}`, `${systemRepo}/main/${fileName}`);
+    copyFile(`${localRepo}/main/${fileName}`, `${remoteRepo}/main/${fileName}`);
   } else {
     console.info("No changes found.");
   }

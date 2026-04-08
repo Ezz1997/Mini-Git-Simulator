@@ -61,7 +61,6 @@ function commitChanges() {
 
   if (lastSavedVersion !== currentVersion) {
     copyFile("story.txt", `${userRepo}/main/${fileName}.txt`);
-    copyFile("story.txt", `${systemRepo}/main/${fileName}.txt`);
   } else {
     console.info("No changes found.");
   }
@@ -86,6 +85,25 @@ function readFile(filePath) {
   }
 }
 
+function pushChanges() {
+  let remoteRes = fs.readdirSync(`${systemRepo}/main`);
+  let localRes = fs.readdirSync(`${userRepo}/main`);
+  let fileName = localRes[localRes.length - 1];
+
+  const localVersion = readFile(
+    `${userRepo}/main/${localRes[localRes.length - 1]}`,
+  );
+  const remoteVersion = readFile(
+    `${systemRepo}/main/${remoteRes[remoteRes.length - 1]}`,
+  );
+
+  if (remoteVersion !== localVersion) {
+    copyFile(`${userRepo}/main/${fileName}`, `${systemRepo}/main/${fileName}`);
+  } else {
+    console.info("No changes found.");
+  }
+}
+
 const args = process.argv.slice(2, 4);
 const action = args[0];
 const value = args[1];
@@ -101,6 +119,9 @@ switch (action) {
     break;
   case "commit":
     commitChanges();
+    break;
+  case "push":
+    pushChanges();
     break;
   default:
     console.log("Unknown action, Try again");

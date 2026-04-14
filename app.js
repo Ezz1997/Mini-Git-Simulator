@@ -3,6 +3,8 @@ import fs from "node:fs";
 let localRepo = "x";
 let remoteRepo = "sys";
 const defaultBranch = "main";
+let curBranch = defaultBranch;
+let repos = [];
 
 function createRepo(repoName) {
   let repoRes = createDir(repoName);
@@ -10,6 +12,10 @@ function createRepo(repoName) {
 
   if (repoRes && branchRes) {
     console.log(`Repository ${repoName} created Successfully!`);
+    let newObj = {};
+    newObj[repoName] = [defaultBranch];
+    repos.push(newObj);
+    saveJsonFile();
   }
 
   if (repoRes === false) {
@@ -21,11 +27,44 @@ function createRepo(repoName) {
   }
 }
 
+function saveJsonFile() {
+  try {
+    if (fs.existsSync("data.json") === false) {
+      fs.writeFileSync("data.json", JSON.stringify(repos, null, 2));
+      console.log("Data Appended Successfully!");
+      return;
+    }
+
+    const data = fs.readFileSync("data.json");
+    let json = JSON.parse(data);
+
+    for (let repo of repos) {
+      console.log(repo);
+      json.push(repo);
+    }
+
+    fs.writeFileSync("data.json", JSON.stringify(json, null, 2));
+    console.log("Data Appended Successfully!");
+  } catch (error) {
+    console.error("Error updating file: " + error);
+  }
+}
+
+function listRepos() {
+  for (let [repoName, branches] of repos.entries()) {
+    console.log(`Repo Name: ${repoName}, branches: ${branches}`);
+  }
+}
+
+function checkout(repoName, branchName) {}
+
 function createBranch(branchName, repoName) {
   let res = createDir(`${repoName || localRepo}/${branchName}`);
 
   if (res) {
     console.log(`Branch ${branchName} created Successfully!`);
+    repos;
+    return res;
   }
 
   if (res === false) {
@@ -104,25 +143,32 @@ function pushChanges() {
   }
 }
 
-const args = process.argv.slice(2, 4);
-const action = args[0];
-const value = args[1];
+function handleActions() {
+  const args = process.argv.slice(2, 4);
+  const action = args[0];
+  const value = args[1];
 
-console.log(`Action: ${action}, Value: ${value}`);
+  console.log(`Action: ${action}, Value: ${value}`);
 
-switch (action) {
-  case "create-repo":
-    createRepo(value);
-    break;
-  case "create-branch":
-    createBranch(value);
-    break;
-  case "commit":
-    commitChanges();
-    break;
-  case "push":
-    pushChanges();
-    break;
-  default:
-    console.log("Unknown action, Try again");
+  switch (action) {
+    case "create-repo":
+      createRepo(value);
+      break;
+    case "create-branch":
+      createBranch(value);
+      break;
+    case "commit":
+      commitChanges();
+      break;
+    case "push":
+      pushChanges();
+      break;
+    case "list-repos":
+      listRepos();
+      break;
+    default:
+      console.log("Unknown action, Try again");
+  }
 }
+
+handleActions();

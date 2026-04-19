@@ -4,17 +4,55 @@ let localRepo = "x";
 let remoteRepo = "sys";
 const defaultBranch = "main";
 let curBranch = defaultBranch;
-let repos = [];
+let data = {
+  repos: {},
+};
+const METADATA_FILE_NAME = "data.json";
+
+function createDir(dirName) {
+  try {
+    if (!fs.existsSync(dirName)) {
+      fs.mkdirSync(dirName);
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function createBranch(branchName, repoName) {
+  let res = createDir(`${repoName || localRepo}/${branchName}`);
+
+  if (res) {
+    console.log(`Branch ${branchName} created Successfully!`);
+    return res;
+  }
+
+  if (res === false) {
+    console.log("Another branch with same name already exists.");
+  }
+
+  if (res === undefined) {
+    console.error("Failed to create new branch");
+  }
+}
 
 function createRepo(repoName) {
   let repoRes = createDir(repoName);
   let branchRes = createBranch(defaultBranch, repoName);
 
+  initMetaData();
+
   if (repoRes && branchRes) {
     console.log(`Repository ${repoName} created Successfully!`);
-    let newObj = {};
-    newObj[repoName] = [defaultBranch];
-    repos.push(newObj);
+    data.repos[repoName] = {
+      branches: {
+        [defaultBranch]: { commits: [] },
+      },
+    };
+
     saveJsonFile();
   }
 
@@ -29,63 +67,25 @@ function createRepo(repoName) {
 
 function saveJsonFile() {
   try {
-    if (fs.existsSync("data.json") === false) {
-      fs.writeFileSync("data.json", JSON.stringify(repos, null, 2));
-      console.log("Data Appended Successfully!");
-      return;
-    }
-
-    const data = fs.readFileSync("data.json");
-    let json = JSON.parse(data);
-
-    for (let repo of repos) {
-      console.log(repo);
-      json.push(repo);
-    }
-
-    fs.writeFileSync("data.json", JSON.stringify(json, null, 2));
+    fs.writeFileSync(METADATA_FILE_NAME, JSON.stringify(data, null, 2));
     console.log("Data Appended Successfully!");
   } catch (error) {
     console.error("Error updating file: " + error);
   }
 }
 
-function listRepos() {
-  for (let [repoName, branches] of repos.entries()) {
-    console.log(`Repo Name: ${repoName}, branches: ${branches}`);
-  }
-}
-
-function checkout(repoName, branchName) {}
-
-function createBranch(branchName, repoName) {
-  let res = createDir(`${repoName || localRepo}/${branchName}`);
-
-  if (res) {
-    console.log(`Branch ${branchName} created Successfully!`);
-    repos;
-    return res;
-  }
-
-  if (res === false) {
-    console.log("Another branch with same name already exists.");
-  }
-
-  if (res === undefined) {
-    console.error("Failed to create new branch");
-  }
-}
-
-function createDir(dirName) {
+function initMetaData() {
   try {
-    if (!fs.existsSync(dirName)) {
-      fs.mkdirSync(dirName);
-      return true;
+    if (fs.existsSync(METADATA_FILE_NAME)) {
+      const readData = fs.readFileSync(METADATA_FILE_NAME);
+      let json = JSON.parse(readData);
+
+      data = json;
     } else {
-      return false;
+      console.log("File was not found");
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error reading file: " + error);
   }
 }
 
@@ -162,9 +162,6 @@ function handleActions() {
       break;
     case "push":
       pushChanges();
-      break;
-    case "list-repos":
-      listRepos();
       break;
     default:
       console.log("Unknown action, Try again");

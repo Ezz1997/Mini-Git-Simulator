@@ -1,17 +1,32 @@
-[
-  {
-    "a": [
-      "main"
-    ]
-  },
-  {
-    "b": [
-      "main"
-    ]
-  },
-  {
-    "c": [
-      "main"
-    ]
+{
+  "repos": {
+    "a": {
+      "branches": {
+        "main": {
+          "commits": []
+        }
+      }
+    },
+    "b": {
+      "branches": {
+        "main": {
+          "commits": []
+        }
+      }
+    },
+    "c": {
+      "branches": {
+        "main": {
+          "commits": []
+        }
+      }
+    },
+    "d": {
+      "branches": {
+        "main": {
+          "commits": []
+        }
+      }
+    }
   }
-]
+}

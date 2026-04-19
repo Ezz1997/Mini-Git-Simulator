@@ -1,12 +1,5 @@
 {
   "repos": {
-    "a": {
-      "branches": {
-        "main": {
-          "commits": []
-        }
-      }
-    },
     "b": {
       "branches": {
         "main": {
@@ -28,5 +21,9 @@
         }
       }
     }
+  },
+  "HEAD": {
+    "repo": "d",
+    "branch": "main"
   }
 }

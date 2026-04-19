@@ -6,6 +6,10 @@ const defaultBranch = "main";
 let curBranch = defaultBranch;
 let data = {
   repos: {},
+  HEAD: {
+    repo: "",
+    branch: "",
+  },
 };
 const METADATA_FILE_NAME = "data.json";
 
@@ -52,6 +56,9 @@ function createRepo(repoName) {
         [defaultBranch]: { commits: [] },
       },
     };
+
+    data.HEAD.repo = repoName;
+    data.HEAD.branch = defaultBranch;
 
     saveJsonFile();
   }

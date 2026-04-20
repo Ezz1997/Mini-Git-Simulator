@@ -27,9 +27,16 @@ function createDir(dirName) {
 }
 
 function createBranch(branchName, repoName) {
+  if (!data.HEAD.repo) {
+    console.error("Can't create a branch without a parent repo");
+    return;
+  }
+
   let res = createDir(`${repoName || localRepo}/${branchName}`);
 
   if (res) {
+    data.repos[data.HEAD.repo].branches[branchName] = { commits: [] };
+    saveJsonFile();
     console.log(`Branch ${branchName} created Successfully!`);
     return res;
   }
@@ -44,10 +51,11 @@ function createBranch(branchName, repoName) {
 }
 
 function createRepo(repoName) {
+  if (!data.HEAD.repo) {
+    data.HEAD.repo = repoName;
+  }
   let repoRes = createDir(repoName);
   let branchRes = createBranch(defaultBranch, repoName);
-
-  initMetaData();
 
   if (repoRes && branchRes) {
     console.log(`Repository ${repoName} created Successfully!`);
@@ -175,4 +183,5 @@ function handleActions() {
   }
 }
 
+initMetaData();
 handleActions();

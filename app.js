@@ -50,6 +50,15 @@ function createBranch(branchName, repoName) {
   }
 }
 
+function checkout(branchName) {
+  if (branchName && data.repos[data.HEAD.repo].branches[branchName]) {
+    data.HEAD.branch = branchName;
+    saveJsonFile();
+  } else {
+    console.error("Branch doesn't exist.");
+  }
+}
+
 function createRepo(repoName) {
   if (!data.HEAD.repo) {
     data.HEAD.repo = repoName;
@@ -177,6 +186,9 @@ function handleActions() {
       break;
     case "push":
       pushChanges();
+      break;
+    case "checkout":
+      checkout(value);
       break;
     default:
       console.log("Unknown action, Try again");

@@ -27,20 +27,17 @@ function createDir(dirName) {
 }
 
 function createBranch(branchName, repoName) {
-  if (!data.HEAD.repo) {
-    console.error("Can't create a branch without a parent repo");
-    return;
-  }
-
-  let res = createDir(`${repoName || localRepo}/${branchName}`);
+  let res = createDir(`${repoName || data.HEAD.repo}/${branchName}`);
 
   if (res) {
-    data.repos[data.HEAD.repo].branches[branchName] = { commits: [] };
-    saveJsonFile();
+    if (!repoName && data.HEAD.repo) {
+      data.repos[data.HEAD.repo].branches[branchName] = { commits: [] };
+      saveJsonFile();
+    }
+
     console.log(`Branch ${branchName} created Successfully!`);
     return res;
   }
-
   if (res === false) {
     console.log("Another branch with same name already exists.");
   }
@@ -60,9 +57,6 @@ function checkout(branchName) {
 }
 
 function createRepo(repoName) {
-  if (!data.HEAD.repo) {
-    data.HEAD.repo = repoName;
-  }
   let repoRes = createDir(repoName);
   let branchRes = createBranch(defaultBranch, repoName);
 
@@ -114,16 +108,18 @@ function initMetaData() {
 }
 
 function commitChanges() {
-  let res = fs.readdirSync(`${localRepo}/main`);
+  let res = fs.readdirSync(`${data.HEAD.repo}/main`);
   let fileName = "story_version";
 
   fileName += res.length;
 
-  const lastSavedVersion = readFile(`${localRepo}/main/${res[res.length - 1]}`);
+  const lastSavedVersion = readFile(
+    `${data.HEAD.repo}/main/${res[res.length - 1]}`,
+  );
   const currentVersion = readFile("story.txt");
 
   if (lastSavedVersion !== currentVersion) {
-    copyFile("story.txt", `${localRepo}/main/${fileName}.txt`);
+    copyFile("story.txt", `${data.HEAD.repo}/main/${fileName}.txt`);
   } else {
     console.info("No changes found.");
   }
@@ -154,7 +150,7 @@ function pushChanges() {
   let fileName = localRes[localRes.length - 1];
 
   const localVersion = readFile(
-    `${localRepo}/main/${localRes[localRes.length - 1]}`,
+    `${data.HEAD.repo}/main/${localRes[localRes.length - 1]}`,
   );
   const remoteVersion = readFile(
     `${remoteRepo}/main/${remoteRes[remoteRes.length - 1]}`,

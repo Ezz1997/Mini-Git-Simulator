@@ -1,21 +1,28 @@
 {
   "repos": {
-    "a": {
+    "repo1": {
+      "branches": {
+        "main": {
+          "commits": []
+        }
+      }
+    },
+    "repo2": {
       "branches": {
         "main": {
           "commits": []
         },
-        "yy": {
+        "branch1": {
           "commits": []
         },
-        "xx": {
+        "branch2": {
           "commits": []
         }
       }
     }
   },
   "HEAD": {
-    "repo": "a",
-    "branch": "yy"
+    "repo": "repo2",
+    "branch": "main"
   }
 }

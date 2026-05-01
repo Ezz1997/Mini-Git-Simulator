@@ -1,0 +1,8 @@
+{
+    "name": "ezgit",
+    "version": "1.0.0",
+    "bin": {
+        "ezgit": "./ezgit.js"
+    },
+    "type": "module"
+}

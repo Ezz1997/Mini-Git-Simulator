@@ -11,7 +11,27 @@ let data = {
     branch: "",
   },
 };
+
 const METADATA_FILE_NAME = "data.json";
+
+function Commit(message) {
+  this.id = crypto.randomUUID();
+  this.message = message;
+  this.date = new Date();
+  this.repo = data.HEAD.repo;
+  this.branch = data.HEAD.branch;
+  this.files = [];
+}
+
+Commit.prototype.toJSON = function () {
+  return {
+    id: this.id,
+    message: this.message,
+    date: this.date,
+    repo: this.repo,
+    branch: this.branch,
+  };
+};
 
 function createDir(dirName) {
   try {
@@ -38,6 +58,7 @@ function createBranch(branchName, repoName) {
     console.log(`Branch ${branchName} created Successfully!`);
     return res;
   }
+
   if (res === false) {
     console.log("Another branch with same name already exists.");
   }
@@ -107,21 +128,83 @@ function initMetaData() {
   }
 }
 
-function commitChanges() {
-  let res = fs.readdirSync(`${data.HEAD.repo}/main`);
-  let fileName = "story_version";
+function getCurrentRepo() {
+  return data.HEAD.repo;
+}
 
-  fileName += res.length;
+function getCurrentBranch() {
+  return data.HEAD.branch;
+}
 
-  const lastSavedVersion = readFile(
-    `${data.HEAD.repo}/main/${res[res.length - 1]}`,
+function commit(commitMessage) {
+  if (!commitMessage) {
+    console.error("Cannot commit without a message, Try Again.");
+    return;
+  }
+
+  if (data.HEAD.repo) {
+    let commit = new Commit(commitMessage);
+    let filesData = [];
+
+    let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+
+    for (let file of files) {
+      let fileData = readFile(`${data.HEAD.repo}/${data.HEAD.branch}/${file}`);
+      let commits =
+        data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+
+      let isDiff = checkDiff(file);
+
+      if (isDiff) {
+        filesData.push({
+          fileName: file,
+          data: fileData,
+        });
+      }
+    }
+
+    if (filesData.length) {
+      console.log(filesData);
+      data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits.push({
+        ...commit,
+        files: filesData,
+      });
+      saveJsonFile();
+    }
+  } else {
+    console.error("Current Repo Missing!");
+  }
+}
+
+function checkDiff(fileName) {
+  const currentVersion = readFile(
+    `${data.HEAD.repo}/${data.HEAD.branch}/${fileName}`,
   );
-  const currentVersion = readFile("story.txt");
 
-  if (lastSavedVersion !== currentVersion) {
-    copyFile("story.txt", `${data.HEAD.repo}/main/${fileName}.txt`);
+  let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+  let lastSavedVersion;
+
+  for (let j = commits.length - 1; j >= 0; j--) {
+    const curCommit = commits[j];
+    lastSavedVersion = curCommit.files?.findLast(
+      (file) => file.fileName === fileName,
+    );
+    if (lastSavedVersion) {
+      break;
+    }
+  }
+
+  if (!lastSavedVersion || !lastSavedVersion.data) {
+    return true;
+  }
+
+  console.log(lastSavedVersion);
+
+  if (lastSavedVersion.data !== currentVersion) {
+    return true;
   } else {
     console.info("No changes found.");
+    return false;
   }
 }
 
@@ -178,13 +261,21 @@ function handleActions() {
       createBranch(value);
       break;
     case "commit":
-      commitChanges();
+      commit(value);
       break;
     case "push":
       pushChanges();
       break;
     case "checkout":
       checkout(value);
+      break;
+    case "cur-repo":
+      let curRepo = getCurrentRepo();
+      console.log(curRepo);
+      break;
+    case "cur-branch":
+      let curBranch = getCurrentBranch();
+      console.log(curBranch);
       break;
     default:
       console.log("Unknown action, Try again");

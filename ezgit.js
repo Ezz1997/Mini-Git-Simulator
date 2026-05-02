@@ -56,12 +56,12 @@ function createBranch(branchName, repoName) {
       saveJsonFile();
     }
 
-    console.log(`Branch ${branchName} created Successfully!`);
+    console.info(`Branch ${branchName} created Successfully!`);
     return res;
   }
 
   if (res === false) {
-    console.log("Another branch with same name already exists.");
+    console.error("Another branch with same name already exists.");
   }
 
   if (res === undefined) {
@@ -83,7 +83,7 @@ function createRepo(repoName) {
   let branchRes = createBranch(defaultBranch, repoName);
 
   if (repoRes && branchRes) {
-    console.log(`Repository ${repoName} created Successfully!`);
+    console.info(`Repository ${repoName} created Successfully!`);
     data.repos[repoName] = {
       branches: {
         [defaultBranch]: { commits: [] },
@@ -97,7 +97,7 @@ function createRepo(repoName) {
   }
 
   if (repoRes === false) {
-    console.log("Another repository with same name already exists.");
+    console.error("Another repository with same name already exists.");
   }
 
   if (repoRes === undefined) {
@@ -108,7 +108,7 @@ function createRepo(repoName) {
 function saveJsonFile() {
   try {
     fs.writeFileSync(METADATA_FILE_NAME, JSON.stringify(data, null, 2));
-    console.log("Data Appended Successfully!");
+    console.info("Data Appended Successfully!");
   } catch (error) {
     console.error("Error updating file: " + error);
   }
@@ -122,7 +122,7 @@ function initMetaData() {
 
       data = json;
     } else {
-      console.log("File was not found");
+      console.error("File was not found");
     }
   } catch (error) {
     console.error("Error reading file: " + error);
@@ -165,7 +165,6 @@ function commit(commitMessage) {
     }
 
     if (filesData.length) {
-      console.log(filesData);
       data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits.push({
         ...commit,
         files: filesData,
@@ -199,8 +198,6 @@ function checkDiff(fileName) {
     return true;
   }
 
-  console.log(lastSavedVersion);
-
   if (lastSavedVersion.data !== currentVersion) {
     return true;
   } else {
@@ -214,7 +211,7 @@ function copyFile(srcPath, distPath) {
     if (err) {
       console.error("Error copying file:", err);
     } else {
-      console.log("File copied successfully!");
+      console.info("File copied successfully!");
     }
   });
 }
@@ -252,7 +249,7 @@ function handleActions() {
   const action = args[0];
   const value = args[1];
 
-  console.log(`Action: ${action}, Value: ${value}`);
+  console.info(`Action: ${action}, Value: ${value}`);
 
   switch (action) {
     case "create-repo":
@@ -272,14 +269,14 @@ function handleActions() {
       break;
     case "cur-repo":
       let curRepo = getCurrentRepo();
-      console.log(curRepo);
+      console.info(curRepo);
       break;
     case "cur-branch":
       let curBranch = getCurrentBranch();
       console.log(curBranch);
       break;
     default:
-      console.log("Unknown action, Try again");
+      console.error("Unknown action, Try again");
   }
 }
 

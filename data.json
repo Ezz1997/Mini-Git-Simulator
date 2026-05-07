@@ -3,107 +3,76 @@
     "test": {
       "branches": {
         "main": {
-          "commits": []
+          "commits": [
+            {
+              "id": "0d76cdae-c34f-405e-af75-c5ccb0775064",
+              "message": "test",
+              "date": "2026-05-02T14:23:17.512Z",
+              "repo": "test",
+              "branch": "main",
+              "files": [
+                {
+                  "fileName": "newFile.txt",
+                  "data": "hello there!"
+                }
+              ]
+            }
+          ]
         },
         "dev": {
           "commits": [
             {
-              "id": "2bdf7907-0501-4faa-85b5-0031b709a7c7",
-              "message": "Initial Commit",
-              "date": "2026-04-29T18:06:44.257Z",
-              "repo": "test",
-              "branch": "dev"
-            },
-            {
-              "id": "89bc2a45-c00b-4e9a-b39f-8da5ca1360fd",
-              "message": "werwer",
-              "date": "2026-04-30T16:29:25.854Z",
-              "repo": "test",
-              "branch": "dev"
-            },
-            {
-              "id": "05e8795a-f1f1-442c-b6d4-ade028fe05e9",
-              "message": "test1",
-              "date": "2026-04-30T17:55:07.310Z",
+              "id": "d197fff2-1c02-48d3-8f17-d2ce14946c2a",
+              "message": "Initial Commit after Hashing",
+              "date": "2026-05-07T19:09:33.778Z",
               "repo": "test",
               "branch": "dev",
               "files": [
                 {
                   "fileName": "file1.txt",
-                  "data": "This is the first file!\r\nHell Yeah!!!"
+                  "6e8ea0c25391d2e69d767be32f598898783ea63d": "6e8ea0c25391d2e69d767be32f598898783ea63d"
                 },
                 {
                   "fileName": "file2.txt",
-                  "data": "Second file\r\nWeel\r\nWell Well well"
-                }
-              ]
-            },
-            {
-              "id": "164fb183-b433-48b8-ad5e-bea2cb27520a",
-              "message": "test2",
-              "date": "2026-05-01T16:11:56.345Z",
-              "repo": "test",
-              "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file2.txt",
-                  "data": "Second file\r\nWeel\r\nWell Well well\r\nyes"
-                }
-              ]
-            },
-            {
-              "id": "ddedfe73-4780-492a-80d5-df1a88d3c2a2",
-              "message": "test3",
-              "date": "2026-05-01T16:22:21.925Z",
-              "repo": "test",
-              "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file1.txt",
-                  "data": "This is the first file!\r\nHell Yeah!!!\r\nfucking Finally!"
-                }
-              ]
-            },
-            {
-              "id": "8083a82b-c106-48d1-8657-9a49858b1a68",
-              "message": "test4",
-              "date": "2026-05-01T16:22:49.924Z",
-              "repo": "test",
-              "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file1.txt",
-                  "data": "This is the first file!\r\nHell Yeah!!!\r\nfucking Finally!\r\nThis is a test"
+                  "d5e33cb0cf4b90cf2aa46c6a66e9f123a3afb519": "d5e33cb0cf4b90cf2aa46c6a66e9f123a3afb519"
                 },
-                {
-                  "fileName": "file2.txt",
-                  "data": "Second file\r\nWeel\r\nWell Well well\r\nyes\r\nThis is also a test"
-                }
-              ]
-            },
-            {
-              "id": "9013132b-ba68-4059-a6de-c596358d6d84",
-              "message": "newfile",
-              "date": "2026-05-01T16:29:31.249Z",
-              "repo": "test",
-              "branch": "dev",
-              "files": [
                 {
                   "fileName": "file3.txt",
-                  "data": "Some kind of giberrish text that doesn't mean anything\r\non its own, but in the grand scheme of things it does \r\nhold a great value."
+                  "f14f2975ca9ebf189a4f0adc011d0ff356223185": "f14f2975ca9ebf189a4f0adc011d0ff356223185"
+                },
+                {
+                  "fileName": "file4AfterHash.txt",
+                  "d4e9907874eb23985bc853eb339e7211f34f8dad": "d4e9907874eb23985bc853eb339e7211f34f8dad"
                 }
               ]
             },
             {
-              "id": "9b8ed254-73d2-42b1-82af-1a5c7cfb3c6f",
-              "message": "this is a multiple words separated by space commit string",
-              "date": "2026-05-01T17:23:06.452Z",
+              "id": "ae42bc81-0c9d-4c67-825c-c8eaf9703797",
+              "message": "Another commit for testing",
+              "date": "2026-05-07T19:11:47.971Z",
+              "repo": "test",
+              "branch": "dev",
+              "files": [
+                {
+                  "fileName": "file4AfterHash.txt",
+                  "911671f0cafa3cf26ff6e3ff03430ba777edb1d7": "911671f0cafa3cf26ff6e3ff03430ba777edb1d7"
+                }
+              ]
+            },
+            {
+              "id": "0aa04e5d-2208-4d75-8d95-7e7846149816",
+              "message": "Some changes",
+              "date": "2026-05-07T19:13:38.299Z",
               "repo": "test",
               "branch": "dev",
               "files": [
                 {
                   "fileName": "file1.txt",
-                  "data": "This is the first file!\r\nHell Yeah!!!\r\nfucking Finally!\r\nThis is a test\r\nmultiple words"
+                  "91a977d000f3d5c29a1b69b4f19a148f881941e4": "91a977d000f3d5c29a1b69b4f19a148f881941e4"
+                },
+                {
+                  "fileName": "file2.txt",
+                  "a6baf598d8630b7a0b1296ad954b3354ee053170": "a6baf598d8630b7a0b1296ad954b3354ee053170"
                 }
               ]
             }
@@ -114,6 +83,6 @@
   },
   "HEAD": {
     "repo": "test",
-    "branch": "main"
+    "branch": "dev"
   }
 }

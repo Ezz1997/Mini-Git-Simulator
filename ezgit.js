@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import crypto from "crypto";
 
 let localRepo = "x";
 let remoteRepo = "sys";
@@ -148,18 +149,19 @@ function commit(commitMessage) {
     let filesData = [];
 
     let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+    let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
 
     for (let file of files) {
-      let fileData = readFile(`${data.HEAD.repo}/${data.HEAD.branch}/${file}`);
-      let commits =
-        data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+      let fileHash = hashFileContent(
+        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
+      );
 
-      let isDiff = checkDiff(file);
+      let isDiff = checkDiff(fileHash);
 
       if (isDiff) {
         filesData.push({
           fileName: file,
-          data: fileData,
+          [fileHash]: fileHash,
         });
       }
     }
@@ -176,29 +178,21 @@ function commit(commitMessage) {
   }
 }
 
-function checkDiff(fileName) {
-  const currentVersion = readFile(
-    `${data.HEAD.repo}/${data.HEAD.branch}/${fileName}`,
-  );
-
+function checkDiff(fileHash) {
   let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
   let lastSavedVersion;
 
   for (let j = commits.length - 1; j >= 0; j--) {
     const curCommit = commits[j];
-    lastSavedVersion = curCommit.files?.findLast(
-      (file) => file.fileName === fileName,
+    lastSavedVersion = curCommit.files?.find(
+      (file) => file[fileHash] === fileHash,
     );
     if (lastSavedVersion) {
       break;
     }
   }
 
-  if (!lastSavedVersion || !lastSavedVersion.data) {
-    return true;
-  }
-
-  if (lastSavedVersion.data !== currentVersion) {
+  if (!lastSavedVersion) {
     return true;
   } else {
     console.info("No changes found.");
@@ -225,23 +219,16 @@ function readFile(filePath) {
   }
 }
 
-function pushChanges() {
-  let remoteRes = fs.readdirSync(`${remoteRepo}/main`);
-  let localRes = fs.readdirSync(`${localRepo}/main`);
-  let fileName = localRes[localRes.length - 1];
+function hashFileContent(src) {
+  let data = readFile(src);
 
-  const localVersion = readFile(
-    `${data.HEAD.repo}/main/${localRes[localRes.length - 1]}`,
-  );
-  const remoteVersion = readFile(
-    `${remoteRepo}/main/${remoteRes[remoteRes.length - 1]}`,
-  );
+  // Create a hash object
+  const hash = crypto.createHash("sha1");
 
-  if (remoteVersion !== localVersion) {
-    copyFile(`${localRepo}/main/${fileName}`, `${remoteRepo}/main/${fileName}`);
-  } else {
-    console.info("No changes found.");
-  }
+  // Update the hash with data
+  hash.update(data);
+
+  return hash.digest("hex");
 }
 
 function handleActions() {

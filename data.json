@@ -22,59 +22,23 @@
         "dev": {
           "commits": [
             {
-              "id": "d197fff2-1c02-48d3-8f17-d2ce14946c2a",
-              "message": "Initial Commit after Hashing",
-              "date": "2026-05-07T19:09:33.778Z",
+              "id": "5cf498e8-53b6-40ca-8b2f-e788706d2366",
+              "message": "ok",
+              "date": "2026-05-09T18:11:41.483Z",
               "repo": "test",
               "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file1.txt",
-                  "6e8ea0c25391d2e69d767be32f598898783ea63d": "6e8ea0c25391d2e69d767be32f598898783ea63d"
-                },
-                {
-                  "fileName": "file2.txt",
-                  "d5e33cb0cf4b90cf2aa46c6a66e9f123a3afb519": "d5e33cb0cf4b90cf2aa46c6a66e9f123a3afb519"
-                },
-                {
-                  "fileName": "file3.txt",
-                  "f14f2975ca9ebf189a4f0adc011d0ff356223185": "f14f2975ca9ebf189a4f0adc011d0ff356223185"
-                },
-                {
-                  "fileName": "file4AfterHash.txt",
-                  "d4e9907874eb23985bc853eb339e7211f34f8dad": "d4e9907874eb23985bc853eb339e7211f34f8dad"
-                }
-              ]
+              "91a977d000f3d5c29a1b69b4f19a148f881941e4": "file1.txt",
+              "a6baf598d8630b7a0b1296ad954b3354ee053170": "file2.txt",
+              "f14f2975ca9ebf189a4f0adc011d0ff356223185": "file3.txt",
+              "911671f0cafa3cf26ff6e3ff03430ba777edb1d7": "file4AfterHash.txt"
             },
             {
-              "id": "ae42bc81-0c9d-4c67-825c-c8eaf9703797",
-              "message": "Another commit for testing",
-              "date": "2026-05-07T19:11:47.971Z",
+              "id": "b7fc9d1f-eebe-4348-ae92-545965b62ddb",
+              "message": "finally",
+              "date": "2026-05-09T18:13:39.497Z",
               "repo": "test",
               "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file4AfterHash.txt",
-                  "911671f0cafa3cf26ff6e3ff03430ba777edb1d7": "911671f0cafa3cf26ff6e3ff03430ba777edb1d7"
-                }
-              ]
-            },
-            {
-              "id": "0aa04e5d-2208-4d75-8d95-7e7846149816",
-              "message": "Some changes",
-              "date": "2026-05-07T19:13:38.299Z",
-              "repo": "test",
-              "branch": "dev",
-              "files": [
-                {
-                  "fileName": "file1.txt",
-                  "91a977d000f3d5c29a1b69b4f19a148f881941e4": "91a977d000f3d5c29a1b69b4f19a148f881941e4"
-                },
-                {
-                  "fileName": "file2.txt",
-                  "a6baf598d8630b7a0b1296ad954b3354ee053170": "a6baf598d8630b7a0b1296ad954b3354ee053170"
-                }
-              ]
+              "0a5ca6a8d28fdd88fcdf0894a4539a87de2d2d86": "file4AfterHash.txt"
             }
           ]
         }

@@ -22,18 +22,7 @@ function Commit(message) {
   this.date = new Date();
   this.repo = data.HEAD.repo;
   this.branch = data.HEAD.branch;
-  this.files = [];
 }
-
-Commit.prototype.toJSON = function () {
-  return {
-    id: this.id,
-    message: this.message,
-    date: this.date,
-    repo: this.repo,
-    branch: this.branch,
-  };
-};
 
 function createDir(dirName) {
   try {
@@ -160,17 +149,19 @@ function commit(commitMessage) {
 
       if (isDiff) {
         filesData.push({
-          fileName: file,
-          [fileHash]: fileHash,
+          [fileHash]: file,
         });
       }
     }
 
     if (filesData.length) {
-      data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits.push({
-        ...commit,
-        files: filesData,
-      });
+      for (let fData of filesData) {
+        const [key, val] = Object.entries(fData)[0];
+        commit[key] = val;
+      }
+
+      commits.push(commit);
+
       saveJsonFile();
     }
   } else {
@@ -184,9 +175,8 @@ function checkDiff(fileHash) {
 
   for (let j = commits.length - 1; j >= 0; j--) {
     const curCommit = commits[j];
-    lastSavedVersion = curCommit.files?.find(
-      (file) => file[fileHash] === fileHash,
-    );
+    lastSavedVersion = curCommit[fileHash];
+
     if (lastSavedVersion) {
       break;
     }

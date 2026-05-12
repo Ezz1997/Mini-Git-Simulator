@@ -22,23 +22,30 @@
         "dev": {
           "commits": [
             {
-              "id": "5cf498e8-53b6-40ca-8b2f-e788706d2366",
-              "message": "ok",
-              "date": "2026-05-09T18:11:41.483Z",
+              "id": "7e3a338a-c15e-47c0-bcd9-b145c8d34fda",
+              "message": "new idea",
+              "date": "2026-05-11T19:05:07.383Z",
               "repo": "test",
               "branch": "dev",
-              "91a977d000f3d5c29a1b69b4f19a148f881941e4": "file1.txt",
-              "a6baf598d8630b7a0b1296ad954b3354ee053170": "file2.txt",
-              "f14f2975ca9ebf189a4f0adc011d0ff356223185": "file3.txt",
-              "911671f0cafa3cf26ff6e3ff03430ba777edb1d7": "file4AfterHash.txt"
+              "snapshot": {
+                "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
+                "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
+                "file3.txt": "f14f2975ca9ebf189a4f0adc011d0ff356223185",
+                "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
+              }
             },
             {
-              "id": "b7fc9d1f-eebe-4348-ae92-545965b62ddb",
-              "message": "finally",
-              "date": "2026-05-09T18:13:39.497Z",
+              "id": "b5418772-bae2-420b-9fef-e04b2eda4500",
+              "message": "smart",
+              "date": "2026-05-11T19:05:49.414Z",
               "repo": "test",
               "branch": "dev",
-              "0a5ca6a8d28fdd88fcdf0894a4539a87de2d2d86": "file4AfterHash.txt"
+              "snapshot": {
+                "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
+                "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
+                "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
+                "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
+              }
             }
           ]
         }
@@ -48,5 +55,11 @@
   "HEAD": {
     "repo": "test",
     "branch": "dev"
+  },
+  "snapshot": {
+    "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
+    "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
+    "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
+    "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
   }
 }

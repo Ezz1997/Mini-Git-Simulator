@@ -174,13 +174,12 @@ function checkDiff(file, fileHash) {
 }
 
 function copyFile(srcPath, distPath) {
-  fs.copyFileSync(srcPath, distPath, (err) => {
-    if (err) {
-      console.error("Error copying file:", err);
-    } else {
-      console.info("File copied successfully!");
-    }
-  });
+  try {
+    fs.copyFileSync(srcPath, distPath);
+    console.info("File copied successfully!");
+  } catch (error) {
+    console.error("Error copying file:", error);
+  }
 }
 
 function readFile(filePath) {

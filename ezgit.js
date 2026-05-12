@@ -12,6 +12,7 @@ let data = {
     repo: "",
     branch: "",
   },
+  snapshot: {},
 };
 
 const METADATA_FILE_NAME = "data.json";
@@ -173,7 +174,7 @@ function checkDiff(file, fileHash) {
 }
 
 function copyFile(srcPath, distPath) {
-  fs.copyFile(srcPath, distPath, (err) => {
+  fs.copyFileSync(srcPath, distPath, (err) => {
     if (err) {
       console.error("Error copying file:", err);
     } else {

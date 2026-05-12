@@ -134,8 +134,6 @@ function commit(commitMessage) {
   }
 
   if (data.HEAD.repo) {
-    let commit = new Commit(commitMessage);
-    let filesData = [];
     let numOfChanges = 0;
 
     let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
@@ -153,6 +151,7 @@ function commit(commitMessage) {
     }
 
     if (numOfChanges) {
+      let commit = new Commit(commitMessage);
       commit.snapshot = structuredClone(data.snapshot);
       commits.push(commit);
 

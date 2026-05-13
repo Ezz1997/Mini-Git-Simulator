@@ -169,12 +169,7 @@ function commit(commitMessage) {
 function checkDiff(file, fileHash) {
   let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
 
-  if (
-    !curBranch.snapshot ||
-    !curBranch.snapshot[file] ||
-    curBranch.snapshot[file] !== fileHash
-  ) {
-    console.log(curBranch);
+  if (!curBranch.snapshot[file] || curBranch.snapshot[file] !== fileHash) {
     curBranch.snapshot[file] = fileHash;
     return true;
   } else {

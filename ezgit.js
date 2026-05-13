@@ -12,7 +12,6 @@ let data = {
     repo: "",
     branch: "",
   },
-  snapshot: {},
 };
 
 const METADATA_FILE_NAME = "data.json";
@@ -43,7 +42,10 @@ function createBranch(branchName, repoName) {
 
   if (res) {
     if (!repoName && data.HEAD.repo) {
-      data.repos[data.HEAD.repo].branches[branchName] = { commits: [] };
+      data.repos[data.HEAD.repo].branches[branchName] = {
+        snapshot: {},
+        commits: [],
+      };
       saveJsonFile();
     }
 
@@ -138,7 +140,8 @@ function commit(commitMessage) {
     let numOfChanges = 0;
 
     let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
-    let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+    let commits = curBranch.commits;
 
     for (let file of files) {
       let fileHash = hashFileContent(
@@ -153,7 +156,7 @@ function commit(commitMessage) {
 
     if (numOfChanges) {
       let commit = new Commit(commitMessage);
-      commit.snapshot = structuredClone(data.snapshot);
+      commit.snapshot = structuredClone(curBranch.snapshot);
       commits.push(commit);
 
       saveJsonFile();
@@ -164,8 +167,15 @@ function commit(commitMessage) {
 }
 
 function checkDiff(file, fileHash) {
-  if (!data.snapshot[file] || data.snapshot[file] !== fileHash) {
-    data.snapshot[file] = fileHash;
+  let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+
+  if (
+    !curBranch.snapshot ||
+    !curBranch.snapshot[file] ||
+    curBranch.snapshot[file] !== fileHash
+  ) {
+    console.log(curBranch);
+    curBranch.snapshot[file] = fileHash;
     return true;
   } else {
     console.info("No changes found.");

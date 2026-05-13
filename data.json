@@ -2,42 +2,18 @@
   "repos": {
     "test": {
       "branches": {
-        "main": {
-          "commits": [
-            {
-              "id": "0d76cdae-c34f-405e-af75-c5ccb0775064",
-              "message": "test",
-              "date": "2026-05-02T14:23:17.512Z",
-              "repo": "test",
-              "branch": "main",
-              "files": [
-                {
-                  "fileName": "newFile.txt",
-                  "data": "hello there!"
-                }
-              ]
-            }
-          ]
-        },
         "dev": {
+          "snapshot": {
+            "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
+            "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
+            "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
+            "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
+          },
           "commits": [
             {
-              "id": "7e3a338a-c15e-47c0-bcd9-b145c8d34fda",
-              "message": "new idea",
-              "date": "2026-05-11T19:05:07.383Z",
-              "repo": "test",
-              "branch": "dev",
-              "snapshot": {
-                "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
-                "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
-                "file3.txt": "f14f2975ca9ebf189a4f0adc011d0ff356223185",
-                "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
-              }
-            },
-            {
-              "id": "b5418772-bae2-420b-9fef-e04b2eda4500",
-              "message": "smart",
-              "date": "2026-05-11T19:05:49.414Z",
+              "id": "bdbb568f-e3be-4f1a-8c96-c37eacd5f2b1",
+              "message": "Is this it?",
+              "date": "2026-05-13T17:31:03.300Z",
               "repo": "test",
               "branch": "dev",
               "snapshot": {
@@ -48,18 +24,48 @@
               }
             }
           ]
+        },
+        "dafuq": {
+          "snapshot": {
+            "dafuq.txt": "4daa3a2af84e5a065c006d190eec5ffe7bd6aa28",
+            "Oi.txt": "09fa0c65d4807f45e625ff17b72ab67e4439ac92"
+          },
+          "commits": [
+            {
+              "id": "9442f439-7e3a-4a26-9e68-1f6c7c48f88c",
+              "message": "hello",
+              "date": "2026-05-13T17:28:34.766Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "4daa3a2af84e5a065c006d190eec5ffe7bd6aa28"
+              }
+            },
+            {
+              "id": "c857ad3c-5326-4ece-8871-5288bdffd083",
+              "message": "oi",
+              "date": "2026-05-13T17:29:08.354Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "4daa3a2af84e5a065c006d190eec5ffe7bd6aa28",
+                "Oi.txt": "09fa0c65d4807f45e625ff17b72ab67e4439ac92"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "x": {
+      "branches": {
+        "main": {
+          "commits": []
         }
       }
     }
   },
   "HEAD": {
     "repo": "test",
-    "branch": "dev"
-  },
-  "snapshot": {
-    "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
-    "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
-    "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
-    "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
+    "branch": "dafuq"
   }
 }

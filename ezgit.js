@@ -5,7 +5,6 @@ import crypto from "crypto";
 let localRepo = "x";
 let remoteRepo = "sys";
 const defaultBranch = "main";
-let curBranch = defaultBranch;
 let data = {
   repos: {},
   HEAD: {
@@ -79,7 +78,7 @@ function createRepo(repoName) {
     console.info(`Repository ${repoName} created Successfully!`);
     data.repos[repoName] = {
       branches: {
-        [defaultBranch]: { commits: [] },
+        [defaultBranch]: { snapshot: {}, commits: [] },
       },
     };
 

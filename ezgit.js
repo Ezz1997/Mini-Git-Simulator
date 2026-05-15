@@ -207,6 +207,20 @@ function hashFileContent(src) {
   return hash.digest("hex");
 }
 
+function logCommitHistory() {
+  let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+
+  if (commits.length < 1) {
+    return;
+  }
+
+  // print commits from newest to oldest
+  for (let i = commits.length - 1; i >= 0; i--) {
+    let commit = commits[i];
+    console.log({ id: commit.id, message: commit.message, date: commit.date });
+  }
+}
+
 function handleActions() {
   const args = process.argv.slice(2, 4);
   const action = args[0];
@@ -224,8 +238,8 @@ function handleActions() {
     case "commit":
       commit(value);
       break;
-    case "push":
-      pushChanges();
+    case "log":
+      logCommitHistory();
       break;
     case "checkout":
       checkout(value);

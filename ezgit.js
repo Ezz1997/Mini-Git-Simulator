@@ -149,6 +149,7 @@ function commit(commitMessage) {
 
       let isDiff = checkDiff(file, fileHash);
       if (isDiff) {
+        curBranch.snapshot[file] = fileHash;
         numOfChanges++;
       }
     }
@@ -159,6 +160,8 @@ function commit(commitMessage) {
       commits.push(commit);
 
       saveJsonFile();
+    } else {
+      console.info("No changes found.");
     }
   } else {
     console.error("Current Repo Missing!");
@@ -169,10 +172,8 @@ function checkDiff(file, fileHash) {
   let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
 
   if (!curBranch.snapshot[file] || curBranch.snapshot[file] !== fileHash) {
-    curBranch.snapshot[file] = fileHash;
     return true;
   } else {
-    console.info("No changes found.");
     return false;
   }
 }
@@ -221,6 +222,34 @@ function logCommitHistory() {
   }
 }
 
+function logStatus() {
+  if (data.HEAD.repo) {
+    let numOfChanges = 0;
+
+    let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+    let commits = curBranch.commits;
+
+    for (let file of files) {
+      let fileHash = hashFileContent(
+        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
+      );
+
+      let isDiff = checkDiff(file, fileHash);
+      if (isDiff) {
+        console.info(`Modified: ${data.HEAD.repo}/${data.HEAD.branch}/${file}`);
+        numOfChanges++;
+      }
+    }
+
+    if (numOfChanges === 0) {
+      console.info("Status: No changes detected.");
+    }
+  } else {
+    console.error("Current Repo Missing!");
+  }
+}
+
 function handleActions() {
   const args = process.argv.slice(2, 4);
   const action = args[0];
@@ -251,6 +280,9 @@ function handleActions() {
     case "cur-branch":
       let curBranch = getCurrentBranch();
       console.log(curBranch);
+      break;
+    case "status":
+      logStatus();
       break;
     default:
       console.error("Unknown action, Try again");

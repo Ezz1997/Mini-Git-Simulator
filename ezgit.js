@@ -40,7 +40,7 @@ function createBranch(branchName, repoName) {
   if (res) {
     if (!repoName && data.HEAD.repo) {
       data.repos[data.HEAD.repo].branches[branchName] = {
-        stagedFile: {},
+        stagedFiles: {},
         snapshot: {},
         commits: [],
       };

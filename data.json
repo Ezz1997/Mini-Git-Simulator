@@ -3,6 +3,7 @@
     "test": {
       "branches": {
         "dev": {
+          "stagedFiles": {},
           "snapshot": {
             "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
             "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
@@ -26,9 +27,10 @@
           ]
         },
         "dafuq": {
+          "stagedFiles": {},
           "snapshot": {
-            "dafuq.txt": "4daa3a2af84e5a065c006d190eec5ffe7bd6aa28",
-            "Oi.txt": "a41bded3c2bbdb31b5177c93bbb9b483839f6839"
+            "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+            "Oi.txt": "0b23a222387ec32c4745d2572d66ec6c3bcee8ef"
           },
           "commits": [
             {
@@ -61,6 +63,61 @@
               "snapshot": {
                 "dafuq.txt": "4daa3a2af84e5a065c006d190eec5ffe7bd6aa28",
                 "Oi.txt": "a41bded3c2bbdb31b5177c93bbb9b483839f6839"
+              }
+            },
+            {
+              "id": "882ca9eb-7e81-427e-aa7c-78a3eb05024a",
+              "message": "Did it work?",
+              "date": "2026-05-17T18:31:35.476Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+                "Oi.txt": "f5f941ce907264ca2da3717aa03ced69a76c29df"
+              }
+            },
+            {
+              "id": "7776f21c-3dcd-42ae-8dab-3363b2aa60eb",
+              "message": "Did it work?",
+              "date": "2026-05-17T18:32:53.317Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+                "Oi.txt": "f5f941ce907264ca2da3717aa03ced69a76c29df"
+              }
+            },
+            {
+              "id": "ce4f2ea1-c8f8-48d7-bce4-e74f89f83582",
+              "message": "Did it work?",
+              "date": "2026-05-17T18:32:58.047Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+                "Oi.txt": "f5f941ce907264ca2da3717aa03ced69a76c29df"
+              }
+            },
+            {
+              "id": "8d25150b-042f-4c43-9b8d-d8f9edf58821",
+              "message": "Did it work?",
+              "date": "2026-05-17T18:33:03.511Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+                "Oi.txt": "f5f941ce907264ca2da3717aa03ced69a76c29df"
+              }
+            },
+            {
+              "id": "98d2f1c0-7e3a-4d86-a80e-10a360c1e04f",
+              "message": "it worked!",
+              "date": "2026-05-18T17:13:14.958Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "67d07a62607819b8c498ebaf87d67f9ef27b5ea4",
+                "Oi.txt": "0b23a222387ec32c4745d2572d66ec6c3bcee8ef"
               }
             }
           ]

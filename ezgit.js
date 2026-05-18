@@ -2,8 +2,6 @@
 import fs from "node:fs";
 import crypto from "crypto";
 
-let localRepo = "x";
-let remoteRepo = "sys";
 const defaultBranch = "main";
 let data = {
   repos: {},
@@ -42,6 +40,7 @@ function createBranch(branchName, repoName) {
   if (res) {
     if (!repoName && data.HEAD.repo) {
       data.repos[data.HEAD.repo].branches[branchName] = {
+        stagedFile: {},
         snapshot: {},
         commits: [],
       };
@@ -78,7 +77,7 @@ function createRepo(repoName) {
     console.info(`Repository ${repoName} created Successfully!`);
     data.repos[repoName] = {
       branches: {
-        [defaultBranch]: { snapshot: {}, commits: [] },
+        [defaultBranch]: { stagedFiles: {}, snapshot: {}, commits: [] },
       },
     };
 
@@ -136,28 +135,18 @@ function commit(commitMessage) {
   }
 
   if (data.HEAD.repo) {
-    let numOfChanges = 0;
-
-    let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
     let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
     let commits = curBranch.commits;
 
-    for (let file of files) {
-      let fileHash = hashFileContent(
-        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
-      );
-
-      let isDiff = checkDiff(file, fileHash);
-      if (isDiff) {
-        curBranch.snapshot[file] = fileHash;
-        numOfChanges++;
-      }
-    }
-
-    if (numOfChanges) {
+    if (
+      curBranch.stagedFiles &&
+      Object.keys(curBranch.stagedFiles).length > 0
+    ) {
+      curBranch.snapshot = { ...curBranch.snapshot, ...curBranch.stagedFiles };
       let commit = new Commit(commitMessage);
       commit.snapshot = structuredClone(curBranch.snapshot);
       commits.push(commit);
+      curBranch.stagedFiles = {};
 
       saveJsonFile();
     } else {
@@ -250,10 +239,52 @@ function logStatus() {
   }
 }
 
+function stageFiles(files) {
+  let stagedFiles = files;
+
+  if (!stagedFiles.length) {
+    return;
+  }
+
+  if (data.HEAD.repo) {
+    if (stagedFiles[0] === ".") {
+      stagedFiles = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+      console.info("Add All changed files");
+    }
+
+    let numOfChanges = 0;
+
+    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+
+    for (let file of stagedFiles) {
+      let fileHash = hashFileContent(
+        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
+      );
+
+      if (curBranch.stagedFiles[file] !== fileHash) {
+        let isDiff = checkDiff(file, fileHash);
+        if (isDiff) {
+          curBranch.stagedFiles[file] = fileHash;
+          numOfChanges++;
+        }
+      }
+    }
+
+    if (numOfChanges) {
+      saveJsonFile();
+    } else {
+      console.info("No changes found.");
+    }
+  } else {
+    console.error("Current Repo Missing!");
+  }
+}
+
 function handleActions() {
   const args = process.argv.slice(2, 4);
   const action = args[0];
   const value = args[1];
+  let files = process.argv.slice(3);
 
   console.info(`Action: ${action}, Value: ${value}`);
 
@@ -283,6 +314,9 @@ function handleActions() {
       break;
     case "status":
       logStatus();
+      break;
+    case "add":
+      stageFiles(files);
       break;
     default:
       console.error("Unknown action, Try again");

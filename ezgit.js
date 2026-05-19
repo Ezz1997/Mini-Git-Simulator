@@ -12,6 +12,7 @@ let data = {
 };
 
 const METADATA_FILE_NAME = "data.json";
+const BLOBS_PATH = ".ezgit/objects";
 
 function Commit(message) {
   this.id = crypto.randomUUID();
@@ -146,6 +147,13 @@ function commit(commitMessage) {
       let commit = new Commit(commitMessage);
       commit.snapshot = structuredClone(curBranch.snapshot);
       commits.push(commit);
+
+      for (let file of Object.keys(curBranch.stagedFiles)) {
+        copyFile(
+          `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
+          `${BLOBS_PATH}/${curBranch.stagedFiles[file]}`,
+        );
+      }
       curBranch.stagedFiles = {};
 
       saveJsonFile();

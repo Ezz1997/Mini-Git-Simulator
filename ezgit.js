@@ -76,6 +76,10 @@ function createRepo(repoName) {
 
   if (repoRes && branchRes) {
     console.info(`Repository ${repoName} created Successfully!`);
+
+    // Create the hidden object database
+    fs.mkdirSync(`${repoName}/${BLOBS_PATH}`, { recursive: true });
+
     data.repos[repoName] = {
       branches: {
         [defaultBranch]: { stagedFiles: {}, snapshot: {}, commits: [] },
@@ -151,7 +155,7 @@ function commit(commitMessage) {
       for (let file of Object.keys(curBranch.stagedFiles)) {
         copyFile(
           `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
-          `${BLOBS_PATH}/${curBranch.stagedFiles[file]}`,
+          `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file]}`,
         );
       }
       curBranch.stagedFiles = {};

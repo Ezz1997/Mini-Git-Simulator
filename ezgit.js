@@ -36,37 +36,54 @@ function createDir(dirName) {
 }
 
 function createBranch(branchName, repoName) {
-  let res = createDir(`${repoName || data.HEAD.repo}/${branchName}`);
-
-  if (res) {
-    if (!repoName && data.HEAD.repo) {
-      data.repos[data.HEAD.repo].branches[branchName] = {
-        stagedFiles: {},
-        snapshot: {},
-        commits: [],
-      };
-      saveJsonFile();
-    }
-
-    console.info(`Branch ${branchName} created Successfully!`);
-    return res;
-  }
-
-  if (res === false) {
-    console.error("Another branch with same name already exists.");
-  }
-
-  if (res === undefined) {
+  if (branchName) {
+    data.repos[repoName || data.HEAD.repo].branches[branchName] = {
+      stagedFiles: {},
+      snapshot: {},
+      commits: [],
+    };
+    saveJsonFile();
+  } else {
     console.error("Failed to create new branch");
   }
 }
 
 function checkout(branchName) {
+  if (branchName === data.HEAD.branch) {
+    return;
+  }
+
   if (branchName && data.repos[data.HEAD.repo].branches[branchName]) {
+    // Delete current physical directory
+    deleteDiretory(`${data.HEAD.repo}/${data.HEAD.branch}`);
     data.HEAD.branch = branchName;
+
+    // Replace old directory with the new one
+    createDir(`${data.HEAD.repo}/${branchName}`);
+
+    // Get files from snapshot
+    let files = data.repos[data.HEAD.repo].branches[branchName].snapshot;
+
+    // for each file put a new copy in the current directory
+    for (let fileName of Object.keys(files)) {
+      copyFile(
+        `${data.HEAD.repo}/${BLOBS_PATH}/${files[fileName]}`,
+        `${data.HEAD.repo}/${branchName}/${fileName}`,
+      );
+    }
+
     saveJsonFile();
   } else {
     console.error("Branch doesn't exist.");
+  }
+}
+
+function deleteDiretory(pathToDir) {
+  try {
+    fs.rmSync(pathToDir, { recursive: true, force: true });
+    console.log("Directory deleted successfully");
+  } catch (error) {
+    console.error("Error while deleting directory: ", err);
   }
 }
 

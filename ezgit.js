@@ -48,6 +48,11 @@ function createBranch(branchName, repoName) {
   }
 }
 
+function checkIsDir(file) {
+  const stats = fs.statSync(`${data.HEAD.repo}/${file}`);
+  return stats.isDirectory();
+}
+
 function checkout(branchName) {
   if (branchName === data.HEAD.branch) {
     return;
@@ -59,8 +64,7 @@ function checkout(branchName) {
 
     // Delete current branch files that don't exist or are outdated in the new branch
     for (let file of files) {
-      const stats = fs.statSync(`${data.HEAD.repo}/${file}`);
-      const isDir = stats.isDirectory();
+      const isDir = checkIsDir(file);
 
       if (!isDir && !snapshot[file]) {
         fs.unlinkSync(`${data.HEAD.repo}/${file}`);
@@ -289,6 +293,11 @@ function stageFiles(files) {
     let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
 
     for (let file of stagedFiles) {
+      const isDir = checkIsDir(file);
+      if (isDir) {
+        continue;
+      }
+
       let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
 
       if (curBranch.stagedFiles[file] !== fileHash) {

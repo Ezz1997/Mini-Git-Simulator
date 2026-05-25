@@ -30,7 +30,8 @@
           "stagedFiles": {},
           "snapshot": {
             "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
-            "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4"
+            "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4",
+            "me.txt": "ab76e6be82c2820f3102d550298f2818c526c90e"
           },
           "commits": [
             {
@@ -42,6 +43,18 @@
               "snapshot": {
                 "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
                 "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4"
+              }
+            },
+            {
+              "id": "0bec3243-d57d-4e21-9eeb-f31b094f3fca",
+              "message": "yup",
+              "date": "2026-05-25T18:19:05.698Z",
+              "repo": "test",
+              "branch": "dafuq",
+              "snapshot": {
+                "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
+                "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4",
+                "me.txt": "ab76e6be82c2820f3102d550298f2818c526c90e"
               }
             }
           ]

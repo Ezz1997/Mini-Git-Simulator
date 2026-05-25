@@ -258,6 +258,11 @@ function logStatus() {
     let commits = curBranch.commits;
 
     for (let file of files) {
+      const isDir = checkIsDir(file);
+      if (isDir) {
+        continue;
+      }
+
       let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
 
       let isDiff = checkDiff(file, fileHash);

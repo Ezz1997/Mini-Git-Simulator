@@ -98,9 +98,8 @@ function deleteDiretory(pathToDir) {
 
 function createRepo(repoName) {
   let repoRes = createDir(repoName);
-  let branchRes = createBranch(defaultBranch, repoName);
 
-  if (repoRes && branchRes) {
+  if (repoRes) {
     console.info(`Repository ${repoName} created Successfully!`);
 
     // Create the hidden object database

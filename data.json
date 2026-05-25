@@ -95,10 +95,19 @@
           "commits": []
         }
       }
+    },
+    "repo1": {
+      "branches": {
+        "main": {
+          "stagedFiles": {},
+          "snapshot": {},
+          "commits": []
+        }
+      }
     }
   },
   "HEAD": {
-    "repo": "test",
-    "branch": "dafuq"
+    "repo": "repo1",
+    "branch": "main"
   }
 }

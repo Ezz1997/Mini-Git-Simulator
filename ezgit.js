@@ -54,21 +54,26 @@ function checkout(branchName) {
   }
 
   if (branchName && data.repos[data.HEAD.repo].branches[branchName]) {
-    // Delete current physical directory
-    deleteDiretory(`${data.HEAD.repo}/${data.HEAD.branch}`);
+    let files = fs.readdirSync(`${data.HEAD.repo}`);
+    let snapshot = data.repos[data.HEAD.repo].branches[branchName].snapshot;
+
+    // Delete current branch files that don't exist or are outdated in the new branch
+    for (let file of files) {
+      const stats = fs.statSync(`${data.HEAD.repo}/${file}`);
+      const isDir = stats.isDirectory();
+
+      if (!isDir && !snapshot[file]) {
+        fs.unlinkSync(`${data.HEAD.repo}/${file}`);
+      }
+    }
+
     data.HEAD.branch = branchName;
 
-    // Replace old directory with the new one
-    createDir(`${data.HEAD.repo}/${branchName}`);
-
-    // Get files from snapshot
-    let files = data.repos[data.HEAD.repo].branches[branchName].snapshot;
-
     // for each file put a new copy in the current directory
-    for (let fileName of Object.keys(files)) {
+    for (let fileName of Object.keys(snapshot)) {
       copyFile(
-        `${data.HEAD.repo}/${BLOBS_PATH}/${files[fileName]}`,
-        `${data.HEAD.repo}/${branchName}/${fileName}`,
+        `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName]}`,
+        `${data.HEAD.repo}/${fileName}`,
       );
     }
 
@@ -171,7 +176,7 @@ function commit(commitMessage) {
 
       for (let file of Object.keys(curBranch.stagedFiles)) {
         copyFile(
-          `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
+          `${data.HEAD.repo}/${file}`,
           `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file]}`,
         );
       }
@@ -244,18 +249,16 @@ function logStatus() {
   if (data.HEAD.repo) {
     let numOfChanges = 0;
 
-    let files = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+    let files = fs.readdirSync(`${data.HEAD.repo}`);
     let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
     let commits = curBranch.commits;
 
     for (let file of files) {
-      let fileHash = hashFileContent(
-        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
-      );
+      let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
 
       let isDiff = checkDiff(file, fileHash);
       if (isDiff) {
-        console.info(`Modified: ${data.HEAD.repo}/${data.HEAD.branch}/${file}`);
+        console.info(`Modified: ${data.HEAD.repo}/${file}`);
         numOfChanges++;
       }
     }
@@ -277,7 +280,7 @@ function stageFiles(files) {
 
   if (data.HEAD.repo) {
     if (stagedFiles[0] === ".") {
-      stagedFiles = fs.readdirSync(`${data.HEAD.repo}/${data.HEAD.branch}`);
+      stagedFiles = fs.readdirSync(`${data.HEAD.repo}`);
       console.info("Add All changed files");
     }
 
@@ -286,9 +289,7 @@ function stageFiles(files) {
     let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
 
     for (let file of stagedFiles) {
-      let fileHash = hashFileContent(
-        `${data.HEAD.repo}/${data.HEAD.branch}/${file}`,
-      );
+      let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
 
       if (curBranch.stagedFiles[file] !== fileHash) {
         let isDiff = checkDiff(file, fileHash);

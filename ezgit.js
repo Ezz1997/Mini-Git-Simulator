@@ -14,12 +14,13 @@ let data = {
 const METADATA_FILE_NAME = "data.json";
 const BLOBS_PATH = ".ezgit/objects";
 
-function Commit(message) {
+function Commit(message, parent = null) {
   this.id = crypto.randomUUID();
   this.message = message;
   this.date = new Date();
   this.repo = data.HEAD.repo;
   this.branch = data.HEAD.branch;
+  this.parent = parent;
 }
 
 function createDir(dirName) {
@@ -175,7 +176,8 @@ function commit(commitMessage) {
       Object.keys(curBranch.stagedFiles).length > 0
     ) {
       curBranch.snapshot = { ...curBranch.snapshot, ...curBranch.stagedFiles };
-      let commit = new Commit(commitMessage);
+      let parentCommit = commits[commits.length - 1] || null;
+      let commit = new Commit(commitMessage, parentCommit.id);
       commit.snapshot = structuredClone(curBranch.snapshot);
       commits.push(commit);
 

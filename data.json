@@ -72,7 +72,7 @@
         "test2": {
           "stagedFiles": {},
           "snapshot": {
-            "sure.txt": "08706552886dc3fbee2fdf06dc7b79f9dac2fa44"
+            "sure.txt": "d2300833a61c89071ebe00b34602d0091262068a"
           },
           "commits": [
             {
@@ -83,6 +83,39 @@
               "branch": "test2",
               "snapshot": {
                 "sure.txt": "08706552886dc3fbee2fdf06dc7b79f9dac2fa44"
+              }
+            },
+            {
+              "id": "96daf54e-3311-4e60-a087-03663e851e41",
+              "message": "parent?",
+              "date": "2026-05-26T17:51:26.200Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "27605608-e00d-428c-98f9-05358e073eb7",
+              "snapshot": {
+                "sure.txt": "9aeeaeab2c9d0f631212ac32ea19dcaaabdfccb2"
+              }
+            },
+            {
+              "id": "29174fb1-e154-4b1f-8261-224b80f85cd6",
+              "message": "test",
+              "date": "2026-05-26T17:52:54.096Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "96daf54e-3311-4e60-a087-03663e851e41",
+              "snapshot": {
+                "sure.txt": "50335a399023fc65e03719f8cc5235c52b9af68a"
+              }
+            },
+            {
+              "id": "9167cd46-faba-4973-97b9-179cd4872f32",
+              "message": "ok",
+              "date": "2026-05-26T17:56:01.851Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "29174fb1-e154-4b1f-8261-224b80f85cd6",
+              "snapshot": {
+                "sure.txt": "d2300833a61c89071ebe00b34602d0091262068a"
               }
             }
           ]

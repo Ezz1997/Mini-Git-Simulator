@@ -75,10 +75,12 @@ function checkout(branchName) {
 
     // for each file put a new copy in the current directory
     for (let fileName of Object.keys(snapshot)) {
-      copyFile(
-        `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName]}`,
-        `${data.HEAD.repo}/${fileName}`,
-      );
+      if (!fs.existsSync(`${data.HEAD.repo}/${fileName}`)) {
+        copyFile(
+          `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName]}`,
+          `${data.HEAD.repo}/${fileName}`,
+        );
+      }
     }
 
     saveJsonFile();

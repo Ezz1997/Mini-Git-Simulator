@@ -107,7 +107,7 @@
     }
   },
   "HEAD": {
-    "repo": "repo1",
-    "branch": "main"
+    "repo": "test",
+    "branch": "test2"
   }
 }

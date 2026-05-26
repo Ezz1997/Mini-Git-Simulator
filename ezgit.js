@@ -179,7 +179,10 @@ function commit(commitMessage) {
     ) {
       curBranch.snapshot = { ...curBranch.snapshot, ...curBranch.stagedFiles };
       let parentCommit = commits[commits.length - 1] || null;
-      let commit = new Commit(commitMessage, parentCommit.id);
+      let commit = new Commit(
+        commitMessage,
+        parentCommit ? parentCommit.id : null,
+      );
       commit.snapshot = structuredClone(curBranch.snapshot);
       commits.push(commit);
 

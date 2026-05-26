@@ -14,13 +14,15 @@ let data = {
 const METADATA_FILE_NAME = "data.json";
 const BLOBS_PATH = ".ezgit/objects";
 
-function Commit(message, parent = null) {
-  this.id = crypto.randomUUID();
-  this.message = message;
-  this.date = new Date();
-  this.repo = data.HEAD.repo;
-  this.branch = data.HEAD.branch;
-  this.parent = parent;
+class Commit {
+  constructor(message, parent = null) {
+    this.id = crypto.randomUUID();
+    this.message = message;
+    this.date = new Date();
+    this.repo = data.HEAD.repo;
+    this.branch = data.HEAD.branch;
+    this.parent = parent;
+  }
 }
 
 function createDir(dirName) {

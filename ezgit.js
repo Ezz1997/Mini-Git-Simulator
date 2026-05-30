@@ -78,12 +78,10 @@ function checkout(branchName) {
 
     // for each file put a new copy in the current directory
     for (let fileName of Object.keys(snapshot)) {
-      if (!fs.existsSync(`${data.HEAD.repo}/${fileName}`)) {
-        copyFile(
-          `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName]}`,
-          `${data.HEAD.repo}/${fileName}`,
-        );
-      }
+      copyFile(
+        `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
+        `${data.HEAD.repo}/${fileName}`,
+      );
     }
 
     saveJsonFile();
@@ -112,7 +110,11 @@ function createRepo(repoName) {
 
     data.repos[repoName] = {
       branches: {
-        [defaultBranch]: { stagedFiles: {}, snapshot: {}, commits: [] },
+        [defaultBranch]: {
+          stagedFiles: {},
+          snapshot: {},
+          commits: [],
+        },
       },
     };
 
@@ -187,10 +189,17 @@ function commit(commitMessage) {
       commits.push(commit);
 
       for (let file of Object.keys(curBranch.stagedFiles)) {
-        copyFile(
-          `${data.HEAD.repo}/${file}`,
-          `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file]}`,
-        );
+        if (
+          commit.snapshot[file].state !== "deleted" &&
+          !fs.existsSync(
+            `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
+          )
+        ) {
+          copyFile(
+            `${data.HEAD.repo}/${file}`,
+            `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
+          );
+        }
       }
       curBranch.stagedFiles = {};
 
@@ -206,7 +215,7 @@ function commit(commitMessage) {
 function checkDiff(file, fileHash) {
   let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
 
-  if (!curBranch.snapshot[file] || curBranch.snapshot[file] !== fileHash) {
+  if (!curBranch.snapshot[file] || curBranch.snapshot[file].hash !== fileHash) {
     return true;
   } else {
     return false;
@@ -288,8 +297,34 @@ function logStatus() {
   }
 }
 
+// Removes deleted files from the main data file
+function removeDeletedFiles(branch) {
+  for (let file of Object.keys(branch.snapshot)) {
+    if (
+      !fs.existsSync(`${data.HEAD.repo}/${file}`) &&
+      branch.snapshot[file].state !== "deleted"
+    ) {
+      branch.stagedFiles[file] = {
+        hash: branch.snapshot[file].hash,
+        state: "deleted",
+      };
+
+      saveJsonFile();
+      console.log("File ", file, " Was not found");
+    }
+  }
+}
+
 function stageFiles(files) {
   let stagedFiles = files;
+
+  const curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+  const snapshot = curBranch.snapshot;
+
+  // Check if a file was deleted, if it is deleted
+  // then remove it from the main data file
+  // removeDeletedFiles(snapshot);
+  removeDeletedFiles(curBranch);
 
   if (!stagedFiles.length) {
     return;
@@ -303,8 +338,6 @@ function stageFiles(files) {
 
     let numOfChanges = 0;
 
-    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
-
     for (let file of stagedFiles) {
       const isDir = checkIsDir(file);
       if (isDir) {
@@ -313,10 +346,18 @@ function stageFiles(files) {
 
       let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
 
-      if (curBranch.stagedFiles[file] !== fileHash) {
+      if (
+        (curBranch.stagedFiles[file]?.hash !== fileHash &&
+          curBranch.snapshot[file]?.hash !== fileHash) ||
+        curBranch.snapshot[file]?.state === "deleted"
+      ) {
+        console.log("Something is Fishy...");
         let isDiff = checkDiff(file, fileHash);
         if (isDiff) {
-          curBranch.stagedFiles[file] = fileHash;
+          curBranch.stagedFiles[file] = {
+            hash: fileHash,
+            state: "present",
+          };
           numOfChanges++;
         }
       }

@@ -72,7 +72,14 @@
         "test2": {
           "stagedFiles": {},
           "snapshot": {
-            "sure.txt": "d2300833a61c89071ebe00b34602d0091262068a"
+            "sure.txt": {
+              "hash": "e92b4d351bbabd2e644cc17b510ce79a3d980197",
+              "state": "present"
+            },
+            "ok.txt": {
+              "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+              "state": "deleted"
+            }
           },
           "commits": [
             {
@@ -116,6 +123,232 @@
               "parent": "29174fb1-e154-4b1f-8261-224b80f85cd6",
               "snapshot": {
                 "sure.txt": "d2300833a61c89071ebe00b34602d0091262068a"
+              }
+            },
+            {
+              "id": "3438d581-61de-4e7a-8ec7-9112ac3dfb69",
+              "message": "oi",
+              "date": "2026-05-28T18:25:42.264Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "9167cd46-faba-4973-97b9-179cd4872f32",
+              "snapshot": {
+                "sure.txt": "ad05cc72575a47ca4810e0e8b75a78cec29447db"
+              }
+            },
+            {
+              "id": "24048263-be6a-43fd-9cd8-ef7b5052ee6e",
+              "message": "oi",
+              "date": "2026-05-28T19:36:48.046Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "3438d581-61de-4e7a-8ec7-9112ac3dfb69",
+              "snapshot": {
+                "sure.txt": "ad05cc72575a47ca4810e0e8b75a78cec29447db"
+              }
+            },
+            {
+              "id": "42c3b958-2d41-484f-9659-6514f9f6f762",
+              "message": "Add file state",
+              "date": "2026-05-29T18:03:28.250Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "24048263-be6a-43fd-9cd8-ef7b5052ee6e",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "30277f99-cf55-4d10-bc95-0f6d90cb6088",
+              "message": "delete file",
+              "date": "2026-05-29T18:14:57.816Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "42c3b958-2d41-484f-9659-6514f9f6f762",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "ff96ac8a-f9ff-4d74-9466-b712f23ef428",
+              "message": "another test",
+              "date": "2026-05-29T18:20:08.175Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "30277f99-cf55-4d10-bc95-0f6d90cb6088",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "03faf90e-c173-4a0e-b39d-8f68a73eccae",
+              "message": "ello dere",
+              "date": "2026-05-29T18:21:22.365Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "ff96ac8a-f9ff-4d74-9466-b712f23ef428",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "0a20dbfe-ecaa-4045-8a64-d47b357fa936",
+              "message": "ello dere",
+              "date": "2026-05-29T18:23:49.928Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "03faf90e-c173-4a0e-b39d-8f68a73eccae",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "5437412d-faa2-44fc-ae2b-880f70e12ef8",
+              "message": "hereer",
+              "date": "2026-05-30T17:56:11.545Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "0a20dbfe-ecaa-4045-8a64-d47b357fa936",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "ad05cc72575a47ca4810e0e8b75a78cec29447db",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "b752c681-6683-4e22-9ce9-1123cefd51f2",
+              "message": "did I fix the bug?",
+              "date": "2026-05-30T18:03:17.546Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "5437412d-faa2-44fc-ae2b-880f70e12ef8",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "7376e400bba27816f3bd094838cc389c099cea8e",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "2daeca9c-4964-4023-882c-ca50d9273505",
+              "message": "did I fix the bug?",
+              "date": "2026-05-30T18:05:02.580Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "b752c681-6683-4e22-9ce9-1123cefd51f2",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "dd8a5c8f98a47c661cc2226eced8a6125f355744",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "e38a35be-8c6b-4a7e-990c-eba93f34e5ce",
+              "message": "Hopefully the bug is fixed now",
+              "date": "2026-05-30T18:06:18.909Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "2daeca9c-4964-4023-882c-ca50d9273505",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "a2d33bbd7833665aee26014d63753cd8973a8273",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "daf11735-4cd3-4834-aa01-2ab379e5268c",
+              "message": "I think it works now",
+              "date": "2026-05-30T18:10:14.192Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "e38a35be-8c6b-4a7e-990c-eba93f34e5ce",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "a2d33bbd7833665aee26014d63753cd8973a8273",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "8d6e7343-b77d-4b67-bc17-8917b84cc351",
+              "message": "let's pray to God that it works now",
+              "date": "2026-05-30T18:18:04.741Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "daf11735-4cd3-4834-aa01-2ab379e5268c",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "a2d33bbd7833665aee26014d63753cd8973a8273",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "7c184469-33ee-4f1d-96cb-8cb49b90d8f4",
+              "message": "Alright I'm actually a Genuis, A fucking Genius!",
+              "date": "2026-05-30T18:19:22.686Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "8d6e7343-b77d-4b67-bc17-8917b84cc351",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "255104aa1b011fdc4eb39a4188ef2d1163c16ca1",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "608e308b-15f2-494d-b49d-4a485960bda0",
+              "message": "Alright I'm actually a Genuis, A fucking Genius!",
+              "date": "2026-05-30T18:37:24.801Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "7c184469-33ee-4f1d-96cb-8cb49b90d8f4",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "e92b4d351bbabd2e644cc17b510ce79a3d980197",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "present"
+                }
+              }
+            },
+            {
+              "id": "f64491c2-4621-4a14-9688-780a10e0412b",
+              "message": "Alright I'm actually a Genuis, A fucking Genius!",
+              "date": "2026-05-30T18:37:47.910Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "608e308b-15f2-494d-b49d-4a485960bda0",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "e92b4d351bbabd2e644cc17b510ce79a3d980197",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
               }
             }
           ]

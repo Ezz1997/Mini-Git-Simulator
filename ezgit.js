@@ -59,6 +59,7 @@ function checkout(branchName) {
 
       if (!isDir && !snapshot[file]) {
         fs.unlinkSync(`${data.HEAD.repo}/${file}`);
+        console.log("Snapshot: ", snapshot);
       }
     }
 
@@ -66,10 +67,12 @@ function checkout(branchName) {
 
     // for each file put a new copy in the current directory
     for (let fileName of Object.keys(snapshot)) {
-      copyFile(
-        `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
-        `${data.HEAD.repo}/${fileName}`,
-      );
+      if (snapshot[fileName].state !== "deleted") {
+        copyFile(
+          `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
+          `${data.HEAD.repo}/${fileName}`,
+        );
+      }
     }
 
     saveJsonFile();

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
-import crypto from "crypto";
+import { hashFileContent } from "./utils/hash.js";
+import { createDir, deleteDiretory, copyFile } from "./utils/fs.js";
 
 const defaultBranch = "main";
 let data = {
@@ -22,19 +23,6 @@ class Commit {
     this.repo = data.HEAD.repo;
     this.branch = data.HEAD.branch;
     this.parent = parent;
-  }
-}
-
-function createDir(dirName) {
-  try {
-    if (!fs.existsSync(dirName)) {
-      fs.mkdirSync(dirName);
-      return true;
-    } else {
-      return false;
-    }
-  } catch (err) {
-    console.error(err);
   }
 }
 
@@ -87,15 +75,6 @@ function checkout(branchName) {
     saveJsonFile();
   } else {
     console.error("Branch doesn't exist.");
-  }
-}
-
-function deleteDiretory(pathToDir) {
-  try {
-    fs.rmSync(pathToDir, { recursive: true, force: true });
-    console.log("Directory deleted successfully");
-  } catch (error) {
-    console.error("Error while deleting directory: ", err);
   }
 }
 
@@ -220,36 +199,6 @@ function checkDiff(file, fileHash) {
   } else {
     return false;
   }
-}
-
-function copyFile(srcPath, distPath) {
-  try {
-    fs.copyFileSync(srcPath, distPath);
-    console.info("File copied successfully!");
-  } catch (error) {
-    console.error("Error copying file:", error);
-  }
-}
-
-function readFile(filePath) {
-  try {
-    const data = fs.readFileSync(filePath, "utf8");
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-function hashFileContent(src) {
-  let data = readFile(src);
-
-  // Create a hash object
-  const hash = crypto.createHash("sha1");
-
-  // Update the hash with data
-  hash.update(data);
-
-  return hash.digest("hex");
 }
 
 function logCommitHistory() {

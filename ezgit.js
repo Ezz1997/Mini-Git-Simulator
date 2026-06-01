@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import { hashFileContent } from "./utils/hash.js";
 import { createDir, deleteDiretory, copyFile } from "./utils/fs.js";
+import { MetadataStore } from "./storage/MetadataStore.js";
 
 const defaultBranch = "main";
 let data = {
@@ -12,7 +13,7 @@ let data = {
   },
 };
 
-const METADATA_FILE_NAME = "data.json";
+const metadataStore = new MetadataStore();
 const BLOBS_PATH = ".ezgit/objects";
 
 class Commit {
@@ -33,7 +34,7 @@ function createBranch(branchName, repoName) {
       snapshot: {},
       commits: [],
     };
-    saveJsonFile();
+    metadataStore.save(data);
   } else {
     console.error("Failed to create new branch");
   }
@@ -75,7 +76,7 @@ function checkout(branchName) {
       }
     }
 
-    saveJsonFile();
+    metadataStore.save(data);
   } else {
     console.error("Branch doesn't exist.");
   }
@@ -103,7 +104,7 @@ function createRepo(repoName) {
     data.HEAD.repo = repoName;
     data.HEAD.branch = defaultBranch;
 
-    saveJsonFile();
+    metadataStore.save(data);
   }
 
   if (repoRes === false) {
@@ -112,30 +113,6 @@ function createRepo(repoName) {
 
   if (repoRes === undefined) {
     console.error("Failed to create new repository");
-  }
-}
-
-function saveJsonFile() {
-  try {
-    fs.writeFileSync(METADATA_FILE_NAME, JSON.stringify(data, null, 2));
-    console.info("Data Appended Successfully!");
-  } catch (error) {
-    console.error("Error updating file: " + error);
-  }
-}
-
-function initMetaData() {
-  try {
-    if (fs.existsSync(METADATA_FILE_NAME)) {
-      const readData = fs.readFileSync(METADATA_FILE_NAME);
-      let json = JSON.parse(readData);
-
-      data = json;
-    } else {
-      console.error("File was not found");
-    }
-  } catch (error) {
-    console.error("Error reading file: " + error);
   }
 }
 
@@ -185,7 +162,7 @@ function commit(commitMessage) {
       }
       curBranch.stagedFiles = {};
 
-      saveJsonFile();
+      metadataStore.save(data);
     } else {
       console.info("No changes found.");
     }
@@ -261,7 +238,7 @@ function removeDeletedFiles(branch) {
         state: "deleted",
       };
 
-      saveJsonFile();
+      metadataStore.save(data);
       console.log("File ", file, " Was not found");
     }
   }
@@ -316,7 +293,7 @@ function stageFiles(files) {
     }
 
     if (numOfChanges) {
-      saveJsonFile();
+      metadataStore.save(data);
     } else {
       console.info("No changes found.");
     }
@@ -368,5 +345,5 @@ function handleActions() {
   }
 }
 
-initMetaData();
+data = metadataStore.load() || data;
 handleActions();

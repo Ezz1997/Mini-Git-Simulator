@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { hashFileContent } from "./utils/hash.js";
 import { createDir, deleteDiretory, copyFile } from "./utils/fs.js";
 import { MetadataStore } from "./storage/MetadataStore.js";
+import { RepositoryManager } from "./RepositoryManager.js";
 
 const defaultBranch = "main";
 let data = {
@@ -14,6 +15,9 @@ let data = {
 };
 
 const metadataStore = new MetadataStore();
+data = metadataStore.load() || data;
+
+const repoManager = new RepositoryManager(data);
 const BLOBS_PATH = ".ezgit/objects";
 
 class Commit {
@@ -21,15 +25,15 @@ class Commit {
     this.id = crypto.randomUUID();
     this.message = message;
     this.date = new Date();
-    this.repo = data.HEAD.repo;
-    this.branch = data.HEAD.branch;
+    this.repo = repoManager.curRepo;
+    this.branch = repoManager.curBranch;
     this.parent = parent;
   }
 }
 
 function createBranch(branchName, repoName) {
   if (branchName) {
-    data.repos[repoName || data.HEAD.repo].branches[branchName] = {
+    data.repos[repoName || repoManager.curRepo].branches[branchName] = {
       stagedFiles: {},
       snapshot: {},
       commits: [],
@@ -41,37 +45,37 @@ function createBranch(branchName, repoName) {
 }
 
 function checkIsDir(file) {
-  const stats = fs.statSync(`${data.HEAD.repo}/${file}`);
+  const stats = fs.statSync(`${repoManager.curRepo}/${file}`);
   return stats.isDirectory();
 }
 
 function checkout(branchName) {
-  if (branchName === data.HEAD.branch) {
+  if (branchName === repoManager.curBranch) {
     return;
   }
 
-  if (branchName && data.repos[data.HEAD.repo].branches[branchName]) {
-    let files = fs.readdirSync(`${data.HEAD.repo}`);
-    let snapshot = data.repos[data.HEAD.repo].branches[branchName].snapshot;
+  if (branchName && data.repos[repoManager.curRepo].branches[branchName]) {
+    let files = fs.readdirSync(`${repoManager.curRepo}`);
+    let snapshot = repoManager.snapshot();
 
     // Delete current branch files that don't exist or are outdated in the new branch
     for (let file of files) {
       const isDir = checkIsDir(file);
 
       if (!isDir && !snapshot[file]) {
-        fs.unlinkSync(`${data.HEAD.repo}/${file}`);
+        fs.unlinkSync(`${repoManager.curRepo}/${file}`);
         console.log("Snapshot: ", snapshot);
       }
     }
 
-    data.HEAD.branch = branchName;
+    repoManager.curBranch = branchName;
 
     // for each file put a new copy in the current directory
     for (let fileName of Object.keys(snapshot)) {
       if (snapshot[fileName].state !== "deleted") {
         copyFile(
-          `${data.HEAD.repo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
-          `${data.HEAD.repo}/${fileName}`,
+          `${repoManager.curRepo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
+          `${repoManager.curRepo}/${fileName}`,
         );
       }
     }
@@ -117,11 +121,11 @@ function createRepo(repoName) {
 }
 
 function getCurrentRepo() {
-  return data.HEAD.repo;
+  return repoManager.curRepo;
 }
 
 function getCurrentBranch() {
-  return data.HEAD.branch;
+  return repoManager.curBranch;
 }
 
 function commit(commitMessage) {
@@ -130,33 +134,37 @@ function commit(commitMessage) {
     return;
   }
 
-  if (data.HEAD.repo) {
-    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+  if (repoManager.curRepo) {
+    let curBranch =
+      data.repos[repoManager.curRepo].branches[repoManager.curBranch];
     let commits = curBranch.commits;
 
     if (
       curBranch.stagedFiles &&
       Object.keys(curBranch.stagedFiles).length > 0
     ) {
-      curBranch.snapshot = { ...curBranch.snapshot, ...curBranch.stagedFiles };
+      repoManager.snapshot = {
+        ...repoManager.snapshot,
+        ...curBranch.stagedFiles,
+      };
       let parentCommit = commits[commits.length - 1] || null;
       let commit = new Commit(
         commitMessage,
         parentCommit ? parentCommit.id : null,
       );
-      commit.snapshot = structuredClone(curBranch.snapshot);
+      commit.snapshot = structuredClone(repoManager.snapshot);
       commits.push(commit);
 
       for (let file of Object.keys(curBranch.stagedFiles)) {
         if (
           commit.snapshot[file].state !== "deleted" &&
           !fs.existsSync(
-            `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
+            `${repoManager.curRepo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
           )
         ) {
           copyFile(
-            `${data.HEAD.repo}/${file}`,
-            `${data.HEAD.repo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
+            `${repoManager.curRepo}/${file}`,
+            `${repoManager.curRepo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
           );
         }
       }
@@ -172,9 +180,10 @@ function commit(commitMessage) {
 }
 
 function checkDiff(file, fileHash) {
-  let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
-
-  if (!curBranch.snapshot[file] || curBranch.snapshot[file].hash !== fileHash) {
+  if (
+    !repoManager.snapshot[file] ||
+    repoManager.snapshot[file].hash !== fileHash
+  ) {
     return true;
   } else {
     return false;
@@ -182,7 +191,8 @@ function checkDiff(file, fileHash) {
 }
 
 function logCommitHistory() {
-  let commits = data.repos[data.HEAD.repo].branches[data.HEAD.branch].commits;
+  let commits =
+    data.repos[repoManager.curRepo].branches[repoManager.curBranch].commits;
 
   if (commits.length < 1) {
     return;
@@ -196,11 +206,12 @@ function logCommitHistory() {
 }
 
 function logStatus() {
-  if (data.HEAD.repo) {
+  if (repoManager.curRepo) {
     let numOfChanges = 0;
 
-    let files = fs.readdirSync(`${data.HEAD.repo}`);
-    let curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
+    let files = fs.readdirSync(`${repoManager.curRepo}`);
+    let curBranch =
+      data.repos[repoManager.curRepo].branches[repoManager.curBranch];
     let commits = curBranch.commits;
 
     for (let file of files) {
@@ -209,11 +220,11 @@ function logStatus() {
         continue;
       }
 
-      let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
+      let fileHash = hashFileContent(`${repoManager.curRepo}/${file}`);
 
       let isDiff = checkDiff(file, fileHash);
       if (isDiff) {
-        console.info(`Modified: ${data.HEAD.repo}/${file}`);
+        console.info(`Modified: ${repoManager.curRepo}/${file}`);
         numOfChanges++;
       }
     }
@@ -230,7 +241,7 @@ function logStatus() {
 function removeDeletedFiles(branch) {
   for (let file of Object.keys(branch.snapshot)) {
     if (
-      !fs.existsSync(`${data.HEAD.repo}/${file}`) &&
+      !fs.existsSync(`${repoManager.curRepo}/${file}`) &&
       branch.snapshot[file].state !== "deleted"
     ) {
       branch.stagedFiles[file] = {
@@ -247,21 +258,20 @@ function removeDeletedFiles(branch) {
 function stageFiles(files) {
   let stagedFiles = files;
 
-  const curBranch = data.repos[data.HEAD.repo].branches[data.HEAD.branch];
-  const snapshot = curBranch.snapshot;
+  const curBranch =
+    data.repos[repoManager.curRepo].branches[repoManager.curBranch];
 
   // Check if a file was deleted, if it is deleted
   // then remove it from the main data file
-  // removeDeletedFiles(snapshot);
   removeDeletedFiles(curBranch);
 
   if (!stagedFiles.length) {
     return;
   }
 
-  if (data.HEAD.repo) {
+  if (repoManager.curRepo) {
     if (stagedFiles[0] === ".") {
-      stagedFiles = fs.readdirSync(`${data.HEAD.repo}`);
+      stagedFiles = fs.readdirSync(`${repoManager.curRepo}`);
       console.info("Add All changed files");
     }
 
@@ -273,12 +283,12 @@ function stageFiles(files) {
         continue;
       }
 
-      let fileHash = hashFileContent(`${data.HEAD.repo}/${file}`);
+      let fileHash = hashFileContent(`${repoManager.curRepo}/${file}`);
 
       if (
         (curBranch.stagedFiles[file]?.hash !== fileHash &&
-          curBranch.snapshot[file]?.hash !== fileHash) ||
-        curBranch.snapshot[file]?.state === "deleted"
+          repoManager.snapshot[file]?.hash !== fileHash) ||
+        repoManager.snapshot[file]?.state === "deleted"
       ) {
         console.log("Something is Fishy...");
         let isDiff = checkDiff(file, fileHash);
@@ -345,5 +355,4 @@ function handleActions() {
   }
 }
 
-data = metadataStore.load() || data;
 handleActions();

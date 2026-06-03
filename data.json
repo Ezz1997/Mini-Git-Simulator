@@ -73,7 +73,7 @@
           "stagedFiles": {},
           "snapshot": {
             "sure.txt": {
-              "hash": "e92b4d351bbabd2e644cc17b510ce79a3d980197",
+              "hash": "a3164c3e216b420c4b32266ebf3db7f947badce4",
               "state": "present"
             },
             "ok.txt": {
@@ -343,6 +343,42 @@
               "snapshot": {
                 "sure.txt": {
                   "hash": "e92b4d351bbabd2e644cc17b510ce79a3d980197",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "b322fa00-b7a9-4581-be2e-d2d88e8b559e",
+              "message": "Alright",
+              "date": "2026-06-02T19:27:24.922Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "f64491c2-4621-4a14-9688-780a10e0412b",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "c23e87607ee0e5b12483444baf5698b29c0b6370",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "cb8c2687-75dd-4fd6-a7e5-288c528d4af8",
+              "message": "well well well",
+              "date": "2026-06-02T19:37:56.970Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "b322fa00-b7a9-4581-be2e-d2d88e8b559e",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "a3164c3e216b420c4b32266ebf3db7f947badce4",
                   "state": "present"
                 },
                 "ok.txt": {

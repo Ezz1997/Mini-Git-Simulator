@@ -14,6 +14,18 @@ class RepositoryManager {
   get snapshot() {
     return this.data.repos[this.curRepo].branches[this.curBranch].snapshot;
   }
+
+  set createBranch(branchName) {
+    if (branchName) {
+      this.data.repos[this.curRepo].branches[branchName] = {
+        stagedFiles: {},
+        snapshot: {},
+        commits: [],
+      };
+    } else {
+      console.error("Failed to create new branch");
+    }
+  }
 }
 
 export { RepositoryManager };

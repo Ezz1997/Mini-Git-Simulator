@@ -31,17 +31,10 @@ class Commit {
   }
 }
 
-function createBranch(branchName, repoName) {
-  if (branchName) {
-    data.repos[repoName || repoManager.curRepo].branches[branchName] = {
-      stagedFiles: {},
-      snapshot: {},
-      commits: [],
-    };
-    metadataStore.save(data);
-  } else {
-    console.error("Failed to create new branch");
-  }
+function createBranch(branchName) {
+  repoManager.createBranch = branchName;
+
+  metadataStore.save(data);
 }
 
 function checkIsDir(file) {

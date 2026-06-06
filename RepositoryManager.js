@@ -19,15 +19,18 @@ class RepositoryManager {
     return this.data.repos[this.curRepo].branches[this.curBranch].snapshot;
   }
 
-  set createBranch(branchName) {
+  createBranch(branchName) {
     if (branchName) {
       this.data.repos[this.curRepo].branches[branchName] = {
         stagedFiles: {},
         snapshot: {},
         commits: [],
       };
+
+      return true;
     } else {
       console.error("Failed to create new branch");
+      return false;
     }
   }
 }

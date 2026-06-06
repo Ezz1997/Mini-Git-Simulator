@@ -32,9 +32,13 @@ class Commit {
 }
 
 function createBranch(branchName) {
-  repoManager.createBranch = branchName;
+  let isCreated = repoManager.createBranch(branchName);
 
-  metadataStore.save(data);
+  if (isCreated) {
+    metadataStore.save(data);
+  } else {
+    console.error("Failed to create branch");
+  }
 }
 
 function checkout(branchName) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import { hashFileContent } from "./utils/hash.js";
-import { createDir, deleteDiretory, copyFile } from "./utils/fs.js";
+import { createDir, deleteDiretory, copyFile, checkIsDir } from "./utils/fs.js";
 import { MetadataStore } from "./storage/MetadataStore.js";
 import { RepositoryManager } from "./RepositoryManager.js";
 
@@ -37,11 +37,6 @@ function createBranch(branchName) {
   metadataStore.save(data);
 }
 
-function checkIsDir(file) {
-  const stats = fs.statSync(`${repoManager.curRepo}/${file}`);
-  return stats.isDirectory();
-}
-
 function checkout(branchName) {
   if (branchName === repoManager.curBranch) {
     return;
@@ -49,11 +44,12 @@ function checkout(branchName) {
 
   if (branchName && data.repos[repoManager.curRepo].branches[branchName]) {
     let files = fs.readdirSync(`${repoManager.curRepo}`);
-    let snapshot = repoManager.snapshot();
+    let snapshot =
+      data.repos[repoManager.curRepo].branches[branchName].snapshot; // TODO: Fix bug
 
     // Delete current branch files that don't exist or are outdated in the new branch
     for (let file of files) {
-      const isDir = checkIsDir(file);
+      const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
 
       if (!isDir && !snapshot[file]) {
         fs.unlinkSync(`${repoManager.curRepo}/${file}`);
@@ -208,7 +204,7 @@ function logStatus() {
     let commits = curBranch.commits;
 
     for (let file of files) {
-      const isDir = checkIsDir(file);
+      const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
       if (isDir) {
         continue;
       }
@@ -271,7 +267,7 @@ function stageFiles(files) {
     let numOfChanges = 0;
 
     for (let file of stagedFiles) {
-      const isDir = checkIsDir(file);
+      const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
       if (isDir) {
         continue;
       }

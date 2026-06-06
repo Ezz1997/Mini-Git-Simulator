@@ -40,4 +40,9 @@ function copyFile(srcPath, distPath) {
   }
 }
 
-export { readFile, createDir, deleteDiretory, copyFile };
+function checkIsDir(path) {
+  const stats = fs.statSync(path);
+  return stats.isDirectory();
+}
+
+export { readFile, createDir, deleteDiretory, copyFile, checkIsDir };

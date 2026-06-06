@@ -11,6 +11,10 @@ class RepositoryManager {
     return this.data.HEAD.branch;
   }
 
+  set curBranch(branch) {
+    this.data.HEAD.branch = branch;
+  }
+
   get snapshot() {
     return this.data.repos[this.curRepo].branches[this.curBranch].snapshot;
   }

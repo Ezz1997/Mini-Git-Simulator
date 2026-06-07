@@ -1,6 +1,14 @@
+import fs from "node:fs";
+import { checkIsDir } from "./utils/fs.js";
+import { MetadataStore } from "./storage/MetadataStore.js";
+import { copyFile } from "./utils/fs.js";
+
+const BLOBS_PATH = ".ezgit/objects";
+
 class RepositoryManager {
-  constructor(data) {
+  constructor(data, store) {
     this.data = data;
+    this.store = store;
   }
 
   get curRepo() {
@@ -31,6 +39,44 @@ class RepositoryManager {
     } else {
       console.error("Failed to create new branch");
       return false;
+    }
+  }
+
+  checkout(branchName) {
+    if (branchName === this.curBranch) {
+      return;
+    }
+
+    if (branchName && this.data.repos[this.curRepo].branches[branchName]) {
+      let files = fs.readdirSync(`${this.curRepo}`);
+      let snapshot =
+        this.data.repos[this.curRepo].branches[branchName].snapshot; // TODO: Fix bug
+
+      // Delete current branch files that don't exist or are outdated in the new branch
+      for (let file of files) {
+        const isDir = checkIsDir(`${this.curRepo}/${file}`);
+
+        if (!isDir && !snapshot[file]) {
+          fs.unlinkSync(`${this.curRepo}/${file}`);
+          console.log("Snapshot: ", snapshot);
+        }
+      }
+
+      this.curBranch = branchName;
+
+      // for each file put a new copy in the current directory
+      for (let fileName of Object.keys(snapshot)) {
+        if (snapshot[fileName].state !== "deleted") {
+          copyFile(
+            `${this.curRepo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
+            `${this.curRepo}/${fileName}`,
+          );
+        }
+      }
+
+      this.store.save(this.data);
+    } else {
+      console.error("Branch doesn't exist.");
     }
   }
 }

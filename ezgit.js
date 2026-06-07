@@ -14,10 +14,10 @@ let data = {
   },
 };
 
-const metadataStore = new MetadataStore();
-data = metadataStore.load() || data;
+const store = new MetadataStore();
+data = store.load() || data;
 
-const repoManager = new RepositoryManager(data);
+const repoManager = new RepositoryManager(data, store);
 const BLOBS_PATH = ".ezgit/objects";
 
 class Commit {
@@ -35,48 +35,14 @@ function createBranch(branchName) {
   let isCreated = repoManager.createBranch(branchName);
 
   if (isCreated) {
-    metadataStore.save(data);
+    store.save(data);
   } else {
     console.error("Failed to create branch");
   }
 }
 
 function checkout(branchName) {
-  if (branchName === repoManager.curBranch) {
-    return;
-  }
-
-  if (branchName && data.repos[repoManager.curRepo].branches[branchName]) {
-    let files = fs.readdirSync(`${repoManager.curRepo}`);
-    let snapshot =
-      data.repos[repoManager.curRepo].branches[branchName].snapshot; // TODO: Fix bug
-
-    // Delete current branch files that don't exist or are outdated in the new branch
-    for (let file of files) {
-      const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
-
-      if (!isDir && !snapshot[file]) {
-        fs.unlinkSync(`${repoManager.curRepo}/${file}`);
-        console.log("Snapshot: ", snapshot);
-      }
-    }
-
-    repoManager.curBranch = branchName;
-
-    // for each file put a new copy in the current directory
-    for (let fileName of Object.keys(snapshot)) {
-      if (snapshot[fileName].state !== "deleted") {
-        copyFile(
-          `${repoManager.curRepo}/${BLOBS_PATH}/${snapshot[fileName].hash}`,
-          `${repoManager.curRepo}/${fileName}`,
-        );
-      }
-    }
-
-    metadataStore.save(data);
-  } else {
-    console.error("Branch doesn't exist.");
-  }
+  repoManager.checkout(branchName);
 }
 
 function createRepo(repoName) {
@@ -101,7 +67,7 @@ function createRepo(repoName) {
     data.HEAD.repo = repoName;
     data.HEAD.branch = defaultBranch;
 
-    metadataStore.save(data);
+    store.save(data);
   }
 
   if (repoRes === false) {
@@ -163,7 +129,7 @@ function commit(commitMessage) {
       }
       curBranch.stagedFiles = {};
 
-      metadataStore.save(data);
+      store.save(data);
     } else {
       console.info("No changes found.");
     }
@@ -242,7 +208,7 @@ function removeDeletedFiles(branch) {
         state: "deleted",
       };
 
-      metadataStore.save(data);
+      store.save(data);
       console.log("File ", file, " Was not found");
     }
   }
@@ -296,7 +262,7 @@ function stageFiles(files) {
     }
 
     if (numOfChanges) {
-      metadataStore.save(data);
+      store.save(data);
     } else {
       console.info("No changes found.");
     }

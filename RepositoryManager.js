@@ -27,6 +27,11 @@ class RepositoryManager {
     return this.data.repos[this.curRepo].branches[this.curBranch].snapshot;
   }
 
+  set snapshot(newSnapshot) {
+    this.data.repos[this.curRepo].branches[this.curBranch].snapshot =
+      newSnapshot;
+  }
+
   createBranch(branchName) {
     if (branchName) {
       this.data.repos[this.curRepo].branches[branchName] = {

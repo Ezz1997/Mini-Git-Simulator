@@ -73,7 +73,7 @@
           "stagedFiles": {},
           "snapshot": {
             "sure.txt": {
-              "hash": "a3164c3e216b420c4b32266ebf3db7f947badce4",
+              "hash": "b25508630bf99fd77770ea5ab35bcd37b0217f52",
               "state": "present"
             },
             "ok.txt": {
@@ -379,6 +379,24 @@
               "snapshot": {
                 "sure.txt": {
                   "hash": "a3164c3e216b420c4b32266ebf3db7f947badce4",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "f5932e88-f012-475e-8dde-edcc6e07c7b1",
+              "message": "idk maybe",
+              "date": "2026-06-08T18:41:06.655Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "cb8c2687-75dd-4fd6-a7e5-288c528d4af8",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "b25508630bf99fd77770ea5ab35bcd37b0217f52",
                   "state": "present"
                 },
                 "ok.txt": {

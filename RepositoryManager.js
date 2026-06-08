@@ -34,12 +34,11 @@ class RepositoryManager {
 
   createBranch(branchName) {
     if (branchName) {
-      this.data.repos[this.curRepo].branches[branchName] = {
-        stagedFiles: {},
-        snapshot: {},
-        commits: [],
-      };
+      const currentBranch =
+        this.data.repos[this.curRepo].branches[this.curBranch];
 
+      this.data.repos[this.curRepo].branches[branchName] =
+        structuredClone(currentBranch);
       return true;
     } else {
       console.error("Failed to create new branch");

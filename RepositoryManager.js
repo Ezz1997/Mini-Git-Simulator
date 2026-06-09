@@ -16,26 +16,34 @@ class RepositoryManager {
   }
 
   get curBranch() {
+    return this.data.repos[this.curRepo].branches[this.curBranchName];
+  }
+
+  get curBranchName() {
     return this.data.HEAD.branch;
   }
 
-  set curBranch(branch) {
+  set curBranchName(branch) {
     this.data.HEAD.branch = branch;
   }
 
   get snapshot() {
-    return this.data.repos[this.curRepo].branches[this.curBranch].snapshot;
+    return this.data.repos[this.curRepo].branches[this.curBranchName].snapshot;
   }
 
   set snapshot(newSnapshot) {
-    this.data.repos[this.curRepo].branches[this.curBranch].snapshot =
+    this.data.repos[this.curRepo].branches[this.curBranchName].snapshot =
       newSnapshot;
+  }
+
+  get commits() {
+    return this.data.repos[this.curRepo].branches[this.curBranchName].commits;
   }
 
   createBranch(branchName) {
     if (branchName) {
       const currentBranch =
-        this.data.repos[this.curRepo].branches[this.curBranch];
+        this.data.repos[this.curRepo].branches[this.curBranchName];
 
       this.data.repos[this.curRepo].branches[branchName] =
         structuredClone(currentBranch);
@@ -47,14 +55,14 @@ class RepositoryManager {
   }
 
   checkout(branchName) {
-    if (branchName === this.curBranch) {
+    if (branchName === this.curBranchName) {
       return;
     }
 
     if (branchName && this.data.repos[this.curRepo].branches[branchName]) {
       let files = fs.readdirSync(`${this.curRepo}`);
       let snapshot =
-        this.data.repos[this.curRepo].branches[branchName].snapshot; // TODO: Fix bug
+        this.data.repos[this.curRepo].branches[branchName].snapshot;
 
       // Delete current branch files that don't exist or are outdated in the new branch
       for (let file of files) {
@@ -66,7 +74,7 @@ class RepositoryManager {
         }
       }
 
-      this.curBranch = branchName;
+      this.curBranchName = branchName;
 
       // for each file put a new copy in the current directory
       for (let fileName of Object.keys(snapshot)) {

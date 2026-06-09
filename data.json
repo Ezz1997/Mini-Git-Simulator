@@ -424,6 +424,15 @@
           "commits": []
         }
       }
+    },
+    "oi": {
+      "branches": {
+        "main": {
+          "stagedFiles": {},
+          "snapshot": {},
+          "commits": []
+        }
+      }
     }
   },
   "HEAD": {

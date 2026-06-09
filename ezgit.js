@@ -26,7 +26,7 @@ class Commit {
     this.message = message;
     this.date = new Date();
     this.repo = repoManager.curRepo;
-    this.branch = repoManager.curBranch;
+    this.branch = repoManager.curBranchName;
     this.parent = parent;
   }
 }
@@ -84,7 +84,7 @@ function getCurrentRepo() {
 }
 
 function getCurrentBranch() {
-  return repoManager.curBranch;
+  return repoManager.curBranchName;
 }
 
 function commit(commitMessage) {
@@ -94,9 +94,8 @@ function commit(commitMessage) {
   }
 
   if (repoManager.curRepo) {
-    let curBranch =
-      data.repos[repoManager.curRepo].branches[repoManager.curBranch];
-    let commits = curBranch.commits;
+    let curBranch = repoManager.curBranch;
+    let commits = repoManager.commits;
 
     if (
       curBranch.stagedFiles &&
@@ -150,8 +149,7 @@ function checkDiff(file, fileHash) {
 }
 
 function logCommitHistory() {
-  let commits =
-    data.repos[repoManager.curRepo].branches[repoManager.curBranch].commits;
+  let commits = repoManager.commits;
 
   if (commits.length < 1) {
     return;
@@ -169,9 +167,8 @@ function logStatus() {
     let numOfChanges = 0;
 
     let files = fs.readdirSync(`${repoManager.curRepo}`);
-    let curBranch =
-      data.repos[repoManager.curRepo].branches[repoManager.curBranch];
-    let commits = curBranch.commits;
+    let curBranch = repoManager.curBranch;
+    let commits = repoManager.commits;
 
     for (let file of files) {
       const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
@@ -217,8 +214,7 @@ function removeDeletedFiles(branch) {
 function stageFiles(files) {
   let stagedFiles = files;
 
-  const curBranch =
-    data.repos[repoManager.curRepo].branches[repoManager.curBranch];
+  const curBranch = repoManager.curBranch;
 
   // Check if a file was deleted, if it is deleted
   // then remove it from the main data file

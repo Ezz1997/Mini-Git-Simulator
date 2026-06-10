@@ -1,7 +1,14 @@
 #!/usr/bin/env node
-import fs from "node:fs";
 import { hashFileContent } from "./utils/hash.js";
-import { createDir, deleteDiretory, copyFile, checkIsDir } from "./utils/fs.js";
+import {
+  createDir,
+  deleteDiretory,
+  copyFile,
+  checkIsDir,
+  makeDir,
+  isFileExists,
+  readDir,
+} from "./utils/fs.js";
 import { MetadataStore } from "./storage/MetadataStore.js";
 import { RepositoryManager } from "./RepositoryManager.js";
 
@@ -52,7 +59,7 @@ function createRepo(repoName) {
     console.info(`Repository ${repoName} created Successfully!`);
 
     // Create the hidden object database
-    fs.mkdirSync(`${repoName}/${BLOBS_PATH}`, { recursive: true });
+    makeDir(`${repoName}/${BLOBS_PATH}`);
 
     data.repos[repoName] = {
       branches: {
@@ -116,7 +123,7 @@ function commit(commitMessage) {
       for (let file of Object.keys(curBranch.stagedFiles)) {
         if (
           commit.snapshot[file].state !== "deleted" &&
-          !fs.existsSync(
+          !isFileExists(
             `${repoManager.curRepo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
           )
         ) {
@@ -166,7 +173,7 @@ function logStatus() {
   if (repoManager.curRepo) {
     let numOfChanges = 0;
 
-    let files = fs.readdirSync(`${repoManager.curRepo}`);
+    let files = readDir(`${repoManager.curRepo}`);
     let curBranch = repoManager.curBranch;
     let commits = repoManager.commits;
 
@@ -197,7 +204,7 @@ function logStatus() {
 function removeDeletedFiles(branch) {
   for (let file of Object.keys(branch.snapshot)) {
     if (
-      !fs.existsSync(`${repoManager.curRepo}/${file}`) &&
+      !isFileExists(`${repoManager.curRepo}/${file}`) &&
       branch.snapshot[file].state !== "deleted"
     ) {
       branch.stagedFiles[file] = {
@@ -226,7 +233,7 @@ function stageFiles(files) {
 
   if (repoManager.curRepo) {
     if (stagedFiles[0] === ".") {
-      stagedFiles = fs.readdirSync(`${repoManager.curRepo}`);
+      stagedFiles = readDir(`${repoManager.curRepo}`);
       console.info("Add All changed files");
     }
 

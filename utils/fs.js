@@ -45,4 +45,25 @@ function checkIsDir(path) {
   return stats.isDirectory();
 }
 
-export { readFile, createDir, deleteDiretory, copyFile, checkIsDir };
+function makeDir(path) {
+  fs.mkdirSync(path, { recursive: true });
+}
+
+function isFileExists(path) {
+  return fs.existsSync(path);
+}
+
+function readDir(path) {
+  return fs.readdirSync(path);
+}
+
+export {
+  readFile,
+  createDir,
+  deleteDiretory,
+  copyFile,
+  checkIsDir,
+  makeDir,
+  isFileExists,
+  readDir,
+};

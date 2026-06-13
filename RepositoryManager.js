@@ -1,9 +1,19 @@
 import fs from "node:fs";
-import { checkIsDir } from "./utils/fs.js";
+import { checkIsDir, isFileExists, copyFile } from "./utils/fs.js";
 import { MetadataStore } from "./storage/MetadataStore.js";
-import { copyFile } from "./utils/fs.js";
 
 const BLOBS_PATH = ".ezgit/objects";
+
+class Commit {
+  constructor(message, parent = null) {
+    this.id = crypto.randomUUID();
+    this.message = message;
+    this.date = new Date();
+    this.repo = this.curRepo;
+    this.branch = this.curBranchName;
+    this.parent = parent;
+  }
+}
 
 class RepositoryManager {
   constructor(data, store) {
@@ -95,6 +105,53 @@ class RepositoryManager {
         },
       },
     };
+  }
+
+  commit(commitMessage) {
+    if (!commitMessage) {
+      console.error("Cannot commit without a message, Try Again.");
+      return;
+    }
+
+    if (this.curRepo) {
+      if (
+        this.curBranch.stagedFiles &&
+        Object.keys(this.curBranch.stagedFiles).length > 0
+      ) {
+        this.snapshot = {
+          ...this.snapshot,
+          ...this.curBranch.stagedFiles,
+        };
+        let parentCommit = this.latestCommit;
+        let commit = new Commit(
+          commitMessage,
+          parentCommit ? parentCommit.id : null,
+        );
+        commit.snapshot = structuredClone(this.snapshot);
+        this.addCommit(commit);
+
+        for (let file of Object.keys(this.curBranch.stagedFiles)) {
+          if (
+            commit.snapshot[file].state !== "deleted" &&
+            !isFileExists(
+              `${this.curRepo}/${BLOBS_PATH}/${this.curBranch.stagedFiles[file].hash}`,
+            )
+          ) {
+            copyFile(
+              `${this.curRepo}/${file}`,
+              `${this.curRepo}/${BLOBS_PATH}/${this.curBranch.stagedFiles[file].hash}`,
+            );
+          }
+        }
+        this.clearStagingArea();
+
+        this.store.save(this.data);
+      } else {
+        console.info("No changes found.");
+      }
+    } else {
+      console.error("Current Repo Missing!");
+    }
   }
 
   createBranch(branchName) {

@@ -73,7 +73,7 @@
           "stagedFiles": {},
           "snapshot": {
             "sure.txt": {
-              "hash": "34459959e4ca0cb463cd058a5ce9fbff7f275586",
+              "hash": "8439f4aa7a220dcb06e210b5714982cf423a9ea0",
               "state": "present"
             },
             "ok.txt": {
@@ -433,6 +433,22 @@
               "snapshot": {
                 "sure.txt": {
                   "hash": "34459959e4ca0cb463cd058a5ce9fbff7f275586",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "b9e5cb35-78c7-4d0f-b858-fb0c648fd5f7",
+              "message": "fast",
+              "date": "2026-06-13T18:58:37.333Z",
+              "parent": null,
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "8439f4aa7a220dcb06e210b5714982cf423a9ea0",
                   "state": "present"
                 },
                 "ok.txt": {

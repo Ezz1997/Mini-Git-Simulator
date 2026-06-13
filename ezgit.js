@@ -27,17 +27,6 @@ data = store.load() || data;
 const repoManager = new RepositoryManager(data, store);
 const BLOBS_PATH = ".ezgit/objects";
 
-class Commit {
-  constructor(message, parent = null) {
-    this.id = crypto.randomUUID();
-    this.message = message;
-    this.date = new Date();
-    this.repo = repoManager.curRepo;
-    this.branch = repoManager.curBranchName;
-    this.parent = parent;
-  }
-}
-
 function createBranch(branchName) {
   let isCreated = repoManager.createBranch(branchName);
 
@@ -79,53 +68,7 @@ function createRepo(repoName) {
 }
 
 function commit(commitMessage) {
-  if (!commitMessage) {
-    console.error("Cannot commit without a message, Try Again.");
-    return;
-  }
-
-  if (repoManager.curRepo) {
-    let curBranch = repoManager.curBranch;
-    let commits = repoManager.commits;
-
-    if (
-      curBranch.stagedFiles &&
-      Object.keys(curBranch.stagedFiles).length > 0
-    ) {
-      repoManager.snapshot = {
-        ...repoManager.snapshot,
-        ...curBranch.stagedFiles,
-      };
-      let parentCommit = repoManager.latestCommit;
-      let commit = new Commit(
-        commitMessage,
-        parentCommit ? parentCommit.id : null,
-      );
-      commit.snapshot = structuredClone(repoManager.snapshot);
-      repoManager.addCommit(commit);
-
-      for (let file of Object.keys(curBranch.stagedFiles)) {
-        if (
-          commit.snapshot[file].state !== "deleted" &&
-          !isFileExists(
-            `${repoManager.curRepo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
-          )
-        ) {
-          copyFile(
-            `${repoManager.curRepo}/${file}`,
-            `${repoManager.curRepo}/${BLOBS_PATH}/${curBranch.stagedFiles[file].hash}`,
-          );
-        }
-      }
-      repoManager.clearStagingArea();
-
-      store.save(data);
-    } else {
-      console.info("No changes found.");
-    }
-  } else {
-    console.error("Current Repo Missing!");
-  }
+  repoManager.commit(commitMessage);
 }
 
 function checkDiff(file, fileHash) {

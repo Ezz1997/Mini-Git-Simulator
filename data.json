@@ -73,7 +73,7 @@
           "stagedFiles": {},
           "snapshot": {
             "sure.txt": {
-              "hash": "b25508630bf99fd77770ea5ab35bcd37b0217f52",
+              "hash": "34459959e4ca0cb463cd058a5ce9fbff7f275586",
               "state": "present"
             },
             "ok.txt": {
@@ -397,6 +397,42 @@
               "snapshot": {
                 "sure.txt": {
                   "hash": "b25508630bf99fd77770ea5ab35bcd37b0217f52",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "838dddc6-d42e-4ce5-a980-780f7135bfb6",
+              "message": "question",
+              "date": "2026-06-12T11:48:12.697Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": "f5932e88-f012-475e-8dde-edcc6e07c7b1",
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "c8a1cd4eebde8aa2aa6162f8af4bc8400b511db4",
+                  "state": "present"
+                },
+                "ok.txt": {
+                  "hash": "9fd7f0f76871e99bf739eab7ad626d30f28c60e3",
+                  "state": "deleted"
+                }
+              }
+            },
+            {
+              "id": "3117c182-5663-4cad-8cb6-77ef53fa7b17",
+              "message": "test",
+              "date": "2026-06-12T12:09:42.622Z",
+              "repo": "test",
+              "branch": "test2",
+              "parent": null,
+              "snapshot": {
+                "sure.txt": {
+                  "hash": "34459959e4ca0cb463cd058a5ce9fbff7f275586",
                   "state": "present"
                 },
                 "ok.txt": {

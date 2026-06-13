@@ -15,8 +15,17 @@ class RepositoryManager {
     return this.data.HEAD.repo;
   }
 
+  set curRepo(repo) {
+    this.data.HEAD.repo = repo;
+  }
+
   get curBranch() {
     return this.data.repos[this.curRepo].branches[this.curBranchName];
+  }
+
+  set curBranch(branch) {
+    return (this.data.repos[this.curRepo].branches[this.curBranchName] =
+      branch);
   }
 
   get curBranchName() {
@@ -38,6 +47,54 @@ class RepositoryManager {
 
   get commits() {
     return this.data.repos[this.curRepo].branches[this.curBranchName].commits;
+  }
+
+  addCommit(commit) {
+    this.data.repos[this.curRepo].branches[this.curBranchName].commits.push(
+      commit,
+    );
+  }
+
+  clearStagingArea() {
+    this.data.repos[this.curRepo].branches[this.curBranchName].stagedFiles = {};
+  }
+
+  latestCommit() {
+    let commits =
+      this.data.repos[this.curRepo].branches[this.curBranchName].commits;
+
+    return commits[commits.length - 1] || null;
+  }
+
+  logCommitHistory() {
+    let commits =
+      this.data.repos[this.curRepo].branches[this.curBranchName].commits;
+
+    if (commits.length < 1) {
+      return;
+    }
+
+    // print commits from newest to oldest
+    for (let i = commits.length - 1; i >= 0; i--) {
+      let commit = commits[i];
+      console.log({
+        id: commit.id,
+        message: commit.message,
+        date: commit.date,
+      });
+    }
+  }
+
+  initRepo(repoName, defaultBranch) {
+    this.data.repos[repoName] = {
+      branches: {
+        [defaultBranch]: {
+          stagedFiles: {},
+          snapshot: {},
+          commits: [],
+        },
+      },
+    };
   }
 
   createBranch(branchName) {

@@ -61,18 +61,10 @@ function createRepo(repoName) {
     // Create the hidden object database
     makeDir(`${repoName}/${BLOBS_PATH}`);
 
-    data.repos[repoName] = {
-      branches: {
-        [defaultBranch]: {
-          stagedFiles: {},
-          snapshot: {},
-          commits: [],
-        },
-      },
-    };
+    repoManager.initRepo(repoName, defaultBranch);
 
-    data.HEAD.repo = repoName;
-    data.HEAD.branch = defaultBranch;
+    repoManager.curRepo = repoName;
+    repoManager.curBranch = defaultBranch;
 
     store.save(data);
   }
@@ -84,14 +76,6 @@ function createRepo(repoName) {
   if (repoRes === undefined) {
     console.error("Failed to create new repository");
   }
-}
-
-function getCurrentRepo() {
-  return repoManager.curRepo;
-}
-
-function getCurrentBranch() {
-  return repoManager.curBranchName;
 }
 
 function commit(commitMessage) {
@@ -112,13 +96,13 @@ function commit(commitMessage) {
         ...repoManager.snapshot,
         ...curBranch.stagedFiles,
       };
-      let parentCommit = commits[commits.length - 1] || null;
+      let parentCommit = repoManager.latestCommit;
       let commit = new Commit(
         commitMessage,
         parentCommit ? parentCommit.id : null,
       );
       commit.snapshot = structuredClone(repoManager.snapshot);
-      commits.push(commit);
+      repoManager.addCommit(commit);
 
       for (let file of Object.keys(curBranch.stagedFiles)) {
         if (
@@ -133,7 +117,7 @@ function commit(commitMessage) {
           );
         }
       }
-      curBranch.stagedFiles = {};
+      repoManager.clearStagingArea();
 
       store.save(data);
     } else {
@@ -156,17 +140,7 @@ function checkDiff(file, fileHash) {
 }
 
 function logCommitHistory() {
-  let commits = repoManager.commits;
-
-  if (commits.length < 1) {
-    return;
-  }
-
-  // print commits from newest to oldest
-  for (let i = commits.length - 1; i >= 0; i--) {
-    let commit = commits[i];
-    console.log({ id: commit.id, message: commit.message, date: commit.date });
-  }
+  repoManager.logCommitHistory();
 }
 
 function logStatus() {
@@ -252,7 +226,6 @@ function stageFiles(files) {
           repoManager.snapshot[file]?.hash !== fileHash) ||
         repoManager.snapshot[file]?.state === "deleted"
       ) {
-        console.log("Something is Fishy...");
         let isDiff = checkDiff(file, fileHash);
         if (isDiff) {
           curBranch.stagedFiles[file] = {
@@ -299,11 +272,11 @@ function handleActions() {
       checkout(value);
       break;
     case "cur-repo":
-      let curRepo = getCurrentRepo();
+      let curRepo = repoManager.curRepo;
       console.info(curRepo);
       break;
     case "cur-branch":
-      let curBranch = getCurrentBranch();
+      let curBranch = repoManager.curBranchName;
       console.log(curBranch);
       break;
     case "status":

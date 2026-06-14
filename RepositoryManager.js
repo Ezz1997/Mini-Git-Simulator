@@ -1,6 +1,7 @@
 import fs from "node:fs";
-import { checkIsDir, isFileExists, copyFile } from "./utils/fs.js";
+import { checkIsDir, isFileExists, copyFile, readDir } from "./utils/fs.js";
 import { MetadataStore } from "./storage/MetadataStore.js";
+import { hashFileContent } from "./utils/hash.js";
 
 const BLOBS_PATH = ".ezgit/objects";
 
@@ -165,6 +166,45 @@ class RepositoryManager {
     } else {
       console.error("Failed to create new branch");
       return false;
+    }
+  }
+
+  checkDiff(file, fileHash) {
+    if (!this.snapshot[file] || this.snapshot[file].hash !== fileHash) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  logStatus() {
+    if (this.curRepo) {
+      let numOfChanges = 0;
+
+      let files = readDir(`${this.curRepo}`);
+      let curBranch = this.curBranch;
+      let commits = this.commits;
+
+      for (let file of files) {
+        const isDir = checkIsDir(`${this.curRepo}/${file}`);
+        if (isDir) {
+          continue;
+        }
+
+        let fileHash = hashFileContent(`${this.curRepo}/${file}`);
+
+        let isDiff = this.checkDiff(file, fileHash);
+        if (isDiff) {
+          console.info(`Modified: ${this.curRepo}/${file}`);
+          numOfChanges++;
+        }
+      }
+
+      if (numOfChanges === 0) {
+        console.info("Status: No changes detected.");
+      }
+    } else {
+      console.error("Current Repo Missing!");
     }
   }
 

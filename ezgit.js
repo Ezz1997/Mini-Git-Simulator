@@ -71,52 +71,6 @@ function commit(commitMessage) {
   repoManager.commit(commitMessage);
 }
 
-function checkDiff(file, fileHash) {
-  if (
-    !repoManager.snapshot[file] ||
-    repoManager.snapshot[file].hash !== fileHash
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function logCommitHistory() {
-  repoManager.logCommitHistory();
-}
-
-function logStatus() {
-  if (repoManager.curRepo) {
-    let numOfChanges = 0;
-
-    let files = readDir(`${repoManager.curRepo}`);
-    let curBranch = repoManager.curBranch;
-    let commits = repoManager.commits;
-
-    for (let file of files) {
-      const isDir = checkIsDir(`${repoManager.curRepo}/${file}`);
-      if (isDir) {
-        continue;
-      }
-
-      let fileHash = hashFileContent(`${repoManager.curRepo}/${file}`);
-
-      let isDiff = checkDiff(file, fileHash);
-      if (isDiff) {
-        console.info(`Modified: ${repoManager.curRepo}/${file}`);
-        numOfChanges++;
-      }
-    }
-
-    if (numOfChanges === 0) {
-      console.info("Status: No changes detected.");
-    }
-  } else {
-    console.error("Current Repo Missing!");
-  }
-}
-
 // Removes deleted files from the main data file
 function removeDeletedFiles(branch) {
   for (let file of Object.keys(branch.snapshot)) {
@@ -169,7 +123,7 @@ function stageFiles(files) {
           repoManager.snapshot[file]?.hash !== fileHash) ||
         repoManager.snapshot[file]?.state === "deleted"
       ) {
-        let isDiff = checkDiff(file, fileHash);
+        let isDiff = this.checkDiff(file, fileHash);
         if (isDiff) {
           curBranch.stagedFiles[file] = {
             hash: fileHash,
@@ -209,7 +163,7 @@ function handleActions() {
       commit(value);
       break;
     case "log":
-      logCommitHistory();
+      repoManager.logCommitHistory();
       break;
     case "checkout":
       checkout(value);
@@ -223,7 +177,7 @@ function handleActions() {
       console.log(curBranch);
       break;
     case "status":
-      logStatus();
+      repoManager.logStatus();
       break;
     case "add":
       stageFiles(files);

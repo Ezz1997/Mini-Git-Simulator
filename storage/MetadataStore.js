@@ -4,7 +4,7 @@ import fs from "node:fs";
 class MetadataStore {
   save(data) {
     try {
-      fs.writeFileSync(METADATA_FILE_NAME, JSON.stringify(data, null, 2));
+      fs.writeFile(METADATA_FILE_NAME, JSON.stringify(data, null, 2));
       console.info("Data Appended Successfully!");
       return true;
     } catch (error) {
@@ -16,7 +16,7 @@ class MetadataStore {
   load() {
     try {
       if (fs.existsSync(METADATA_FILE_NAME)) {
-        const readData = fs.readFileSync(METADATA_FILE_NAME);
+        const readData = fs.readFile(METADATA_FILE_NAME);
         let json = JSON.parse(readData);
 
         return json;

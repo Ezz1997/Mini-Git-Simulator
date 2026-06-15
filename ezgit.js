@@ -119,7 +119,7 @@ function stageFiles(files) {
           repoManager.snapshot[file]?.hash !== fileHash) ||
         repoManager.snapshot[file]?.state === "deleted"
       ) {
-        let isDiff = this.checkDiff(file, fileHash);
+        let isDiff = repoManager.checkDiff(file, fileHash);
         if (isDiff) {
           curBranch.stagedFiles[file] = {
             hash: fileHash,

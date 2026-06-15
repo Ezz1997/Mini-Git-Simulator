@@ -35,8 +35,7 @@ class RepositoryManager {
   }
 
   set curBranch(branch) {
-    return (this.data.repos[this.curRepo].branches[this.curBranchName] =
-      branch);
+    this.data.repos[this.curRepo].branches[this.curBranchName] = branch;
   }
 
   get curBranchName() {
@@ -123,7 +122,7 @@ class RepositoryManager {
           ...this.snapshot,
           ...this.curBranch.stagedFiles,
         };
-        let parentCommit = this.latestCommit;
+        let parentCommit = this.latestCommit();
         let commit = new Commit(
           commitMessage,
           parentCommit ? parentCommit.id : null,

@@ -67,10 +67,6 @@ function createRepo(repoName) {
   }
 }
 
-function commit(commitMessage) {
-  repoManager.commit(commitMessage);
-}
-
 // Removes deleted files from the main data file
 function removeDeletedFiles(branch) {
   for (let file of Object.keys(branch.snapshot)) {
@@ -160,7 +156,7 @@ function handleActions() {
       createBranch(value);
       break;
     case "commit":
-      commit(value);
+      repoManager.commit(value);
       break;
     case "log":
       repoManager.logCommitHistory();
@@ -169,12 +165,10 @@ function handleActions() {
       checkout(value);
       break;
     case "cur-repo":
-      let curRepo = repoManager.curRepo;
-      console.info(curRepo);
+      console.info(repoManager.curRepo);
       break;
     case "cur-branch":
-      let curBranch = repoManager.curBranchName;
-      console.log(curBranch);
+      console.log(repoManager.curBranchName);
       break;
     case "status":
       repoManager.logStatus();

@@ -80,7 +80,7 @@ class RepositoryManager {
     let commits =
       this.data.repos[this.curRepo].branches[this.curBranchName].commits;
 
-    if (commits.length < 1) {
+    if (!commits || commits.length < 1) {
       return;
     }
 

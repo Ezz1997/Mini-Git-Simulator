@@ -485,6 +485,17 @@
           "commits": []
         }
       }
+    },
+    "test123123": {
+      "branches": {
+        "main": {
+          "stagedFiles": {},
+          "snapshot": {},
+          "commits": []
+        },
+        "test2": "main",
+        "cere": "main"
+      }
     }
   },
   "HEAD": {

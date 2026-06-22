@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 function readFile(filePath) {
   try {
-    const data = fs.readFile(filePath, "utf8");
+    const data = fs.readFileSync(filePath, "utf8");
     return data;
   } catch (err) {
     console.error(err);

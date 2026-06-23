@@ -2,63 +2,6 @@
   "repos": {
     "test": {
       "branches": {
-        "dev": {
-          "stagedFiles": {},
-          "snapshot": {
-            "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
-            "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
-            "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
-            "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
-          },
-          "commits": [
-            {
-              "id": "8355f25c-64e5-4bae-91f7-4345cdab2420",
-              "message": "Initial Commit",
-              "date": "2026-05-23T18:16:16.326Z",
-              "repo": "test",
-              "branch": "dev",
-              "snapshot": {
-                "file1.txt": "91a977d000f3d5c29a1b69b4f19a148f881941e4",
-                "file2.txt": "a6baf598d8630b7a0b1296ad954b3354ee053170",
-                "file3.txt": "eb050dae384301fc3292a09ca7df2c34c094a69b",
-                "file4AfterHash.txt": "e66851aad73c3dd284e93774a63ff97e34de0b56"
-              }
-            }
-          ]
-        },
-        "dafuq": {
-          "stagedFiles": {},
-          "snapshot": {
-            "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
-            "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4",
-            "me.txt": "ab76e6be82c2820f3102d550298f2818c526c90e"
-          },
-          "commits": [
-            {
-              "id": "40d4778a-6ead-4831-94b5-d96c31952747",
-              "message": "Initial Commit",
-              "date": "2026-05-23T18:18:17.037Z",
-              "repo": "test",
-              "branch": "dafuq",
-              "snapshot": {
-                "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
-                "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4"
-              }
-            },
-            {
-              "id": "0bec3243-d57d-4e21-9eeb-f31b094f3fca",
-              "message": "yup",
-              "date": "2026-05-25T18:19:05.698Z",
-              "repo": "test",
-              "branch": "dafuq",
-              "snapshot": {
-                "dafuq.txt": "05d8b7ec995c018ddf4e208696913ced89eac02d",
-                "Oi.txt": "4792f2b8ee751ea275b932560848932f85039ec4",
-                "me.txt": "ab76e6be82c2820f3102d550298f2818c526c90e"
-              }
-            }
-          ]
-        },
         "test777": {
           "stagedFiles": {},
           "snapshot": {},
